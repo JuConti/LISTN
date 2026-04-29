@@ -591,6 +591,30 @@
     .detail-panel::-webkit-scrollbar-track { background: transparent; }
     .detail-panel::-webkit-scrollbar-thumb { background: #333; }
 
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { transform: scaleY(1); opacity: 1; }
+      50%       { transform: scaleY(0.4); opacity: 0.4; }
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1; transform: translateY(0);
+    }
+
     /* ─── CREATE SECTION ────────────────────────────────────── */
     .create-section {
       padding: 120px 40px;
@@ -660,7 +684,7 @@
   <!-- NAV -->
   <nav>
     <a href="#top" class="nav-logo">
-      <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 841.9 330.8"><defs><style>.st0{fill:currentColor}</style></defs><path class="st0" d="M432.7,136.2c-37.3-14.8-44.3-18.5-44.3-37.8s11.9-30,25.4-30c21.7,0,31.5,13.3,32.6,40h35.4c0-60.1-31-85.3-66.7-85.3s-62.2,26.3-62.2,79.7,11.4,56.3,36.6,69.7c10.7,5.6,21.4,9.3,33.8,14.5,20.5,8.2,28.7,18.5,28.7,35.2,0,24.1-15.8,33-32.6,33s-36.6-11.5-36.6-48.9h-35.4v1.9c0,65.6,35.7,92.3,70.9,92.3s69.2-34.8,69.2-84.9-30.1-69.3-54.8-79.3Z"/><path class="st0" d="M264.9,237.1c-6.8,0-12.7,2.4-14.6,7l1.4.9c1.7-4.1,6.8-6.3,13.2-6.3,9.8,0,15.1,8.3,15.1,15.8-.2,15-11.7,25-30.9,25-60,0-115.2-56-176.4-63l.3-1.5c19.7-.6,40.7-12.2,58.1-33.1,55.4-16.8,111.9-88.5,112.3-132.4.2-22-13.7-36.7-34.5-36.7s-45.8,19.4-57.1,50c-11.6,31.1-20.1,87.6-37.4,119.7-33.3-2.4-55-31.9-54.7-62,.2-29.9,19.9-50.3,37.9-50.3s20.7,11.3,20.5,20.3c0,9.6-8.1,19.1-16.3,19.1s-7.6-1.8-7.8-5.5h-1.6c0,4.1,3.9,7,9.2,7,9.7,0,18.3-10.2,18.4-21.6.1-13.3-10.2-26.6-32.4-26.6s-52.8,24.9-53,57.3c-.4,40.9,39.3,66,78.4,64.8-1.4,2.4-2.8,4.6-4.3,6.6-9.1,13.7-21.2,21.3-34.1,21.3h-1.1c-1.3,0-2.5-.1-3.8-.2-14.6-1.8-23.4-13.1-31.9-17.2-9.3-4.4-20.8-1-20.8,9.7,0,6.8,6.2,13,16.9,14,12.8,1.4,27.4-2.4,36.8-1.4,69.8,12.5,79.3,94.2,151.3,94.2s60.9-26.8,61-54c.1-13-7.2-21.1-17.9-21.1ZM149.8,152.8c30.6-62.4,40.5-110.2,66-110.2s13.9,6.4,13.8,17.4c-.3,35.1-49.7,104.9-96.1,118.9,6-7.6,11.5-16.3,16.3-26.1Z"/><polygon class="st0" points="786.5 27.6 786.5 211 786 211 716.6 27.6 680.2 27.6 680.2 301 714.5 301 714.5 118 714.9 118 784.2 301 820.8 301 820.8 27.6 786.5 27.6"/><path class="st0" d="M324.8,32.8c4.1-5.1,8.8-8.4,14.1-9.7h-61.8c5.5,1.3,10.4,4.6,14.5,9.7,4.1,5.1,6.1,10.6,6.1,16.4v225c0,5.8-2.1,11.3-6.1,16.4-4.1,5.1-8.9,8.4-14.5,9.7h61.8c-5.3-1.3-10-4.6-14.1-9.7-4.1-5.1-6.1-10.6-6.1-16.4V49.2c0-5.8,2-11.3,6.1-16.4Z"/><path class="st0" d="M673.1,85.6h0c0,0-36.5,0-36.5,0,2.2-3.4,4.2-6.7,5.8-9.6,5.8-10.2,11.1-23.1,11.2-33.1,0-12.9-6.7-20-19.4-20s-.1,0-.2,0c0,0,0,0-.1,0-12.1,0-29.7,8.9-51.4,42.5-3.8,5.9-8,12.7-12.5,20.2h-38.5l-.7,1.5-9.3,14.9h38.1c-27.6,45.9-59,105.7-65.4,151.5-.8,5.2-1.3,10.1-1.3,14.7,0,8.2,1.4,15.5,4.3,21.1,3.7,7.2,9.7,11.7,18.1,11.7,24.6,0,46.8-29,76.9-92,0-.3-.3-.6-.6-.8-.5-.5-1.4-.6-2.3.7-13,26.7-41.1,83.9-65.4,83.9s-6.3-1.4-7.9-3.9c-1.2-2-1.7-4.6-1.6-7.9.2-21.9,30-66.3,61.1-109.1,21.8-30.6,36.1-48.3,50.3-69.8h37.5l7.8-12.5h.2l.7-1.4,1.5-2.5h-.3Z"/></svg>
+      <img src="https://ik.imagekit.io/qppkb7d3b/logo/Logo%20TFG.svg?updatedAt=1777411109221" alt="LISTN" style="height:28px;width:auto;display:block;filter:brightness(0) invert(1);" />
     </a>
     <div class="nav-right">
       <a href="#feed"   class="nav-link active">Feed</a>
@@ -921,7 +945,9 @@
 
   <!-- FOOTER -->
   <footer>
-    <span class="footer-logo"><svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 841.9 330.8" height="16" style="display:block;width:auto;"><defs><style>.st0{fill:currentColor}</style></defs><path class="st0" d="M432.7,136.2c-37.3-14.8-44.3-18.5-44.3-37.8s11.9-30,25.4-30c21.7,0,31.5,13.3,32.6,40h35.4c0-60.1-31-85.3-66.7-85.3s-62.2,26.3-62.2,79.7,11.4,56.3,36.6,69.7c10.7,5.6,21.4,9.3,33.8,14.5,20.5,8.2,28.7,18.5,28.7,35.2,0,24.1-15.8,33-32.6,33s-36.6-11.5-36.6-48.9h-35.4v1.9c0,65.6,35.7,92.3,70.9,92.3s69.2-34.8,69.2-84.9-30.1-69.3-54.8-79.3Z"/><path class="st0" d="M264.9,237.1c-6.8,0-12.7,2.4-14.6,7l1.4.9c1.7-4.1,6.8-6.3,13.2-6.3,9.8,0,15.1,8.3,15.1,15.8-.2,15-11.7,25-30.9,25-60,0-115.2-56-176.4-63l.3-1.5c19.7-.6,40.7-12.2,58.1-33.1,55.4-16.8,111.9-88.5,112.3-132.4.2-22-13.7-36.7-34.5-36.7s-45.8,19.4-57.1,50c-11.6,31.1-20.1,87.6-37.4,119.7-33.3-2.4-55-31.9-54.7-62,.2-29.9,19.9-50.3,37.9-50.3s20.7,11.3,20.5,20.3c0,9.6-8.1,19.1-16.3,19.1s-7.6-1.8-7.8-5.5h-1.6c0,4.1,3.9,7,9.2,7,9.7,0,18.3-10.2,18.4-21.6.1-13.3-10.2-26.6-32.4-26.6s-52.8,24.9-53,57.3c-.4,40.9,39.3,66,78.4,64.8-1.4,2.4-2.8,4.6-4.3,6.6-9.1,13.7-21.2,21.3-34.1,21.3h-1.1c-1.3,0-2.5-.1-3.8-.2-14.6-1.8-23.4-13.1-31.9-17.2-9.3-4.4-20.8-1-20.8,9.7,0,6.8,6.2,13,16.9,14,12.8,1.4,27.4-2.4,36.8-1.4,69.8,12.5,79.3,94.2,151.3,94.2s60.9-26.8,61-54c.1-13-7.2-21.1-17.9-21.1ZM149.8,152.8c30.6-62.4,40.5-110.2,66-110.2s13.9,6.4,13.8,17.4c-.3,35.1-49.7,104.9-96.1,118.9,6-7.6,11.5-16.3,16.3-26.1Z"/><polygon class="st0" points="786.5 27.6 786.5 211 786 211 716.6 27.6 680.2 27.6 680.2 301 714.5 301 714.5 118 714.9 118 784.2 301 820.8 301 820.8 27.6 786.5 27.6"/><path class="st0" d="M324.8,32.8c4.1-5.1,8.8-8.4,14.1-9.7h-61.8c5.5,1.3,10.4,4.6,14.5,9.7,4.1,5.1,6.1,10.6,6.1,16.4v225c0,5.8-2.1,11.3-6.1,16.4-4.1,5.1-8.9,8.4-14.5,9.7h61.8c-5.3-1.3-10-4.6-14.1-9.7-4.1-5.1-6.1-10.6-6.1-16.4V49.2c0-5.8,2-11.3,6.1-16.4Z"/><path class="st0" d="M673.1,85.6h0c0,0-36.5,0-36.5,0,2.2-3.4,4.2-6.7,5.8-9.6,5.8-10.2,11.1-23.1,11.2-33.1,0-12.9-6.7-20-19.4-20s-.1,0-.2,0c0,0,0,0-.1,0-12.1,0-29.7,8.9-51.4,42.5-3.8,5.9-8,12.7-12.5,20.2h-38.5l-.7,1.5-9.3,14.9h38.1c-27.6,45.9-59,105.7-65.4,151.5-.8,5.2-1.3,10.1-1.3,14.7,0,8.2,1.4,15.5,4.3,21.1,3.7,7.2,9.7,11.7,18.1,11.7,24.6,0,46.8-29,76.9-92,0-.3-.3-.6-.6-.8-.5-.5-1.4-.6-2.3.7-13,26.7-41.1,83.9-65.4,83.9s-6.3-1.4-7.9-3.9c-1.2-2-1.7-4.6-1.6-7.9.2-21.9,30-66.3,61.1-109.1,21.8-30.6,36.1-48.3,50.3-69.8h37.5l7.8-12.5h.2l.7-1.4,1.5-2.5h-.3Z"/></svg></span>
+    <span class="footer-logo">
+      <img src="https://ik.imagekit.io/qppkb7d3b/logo/Logo%20TFG.svg?updatedAt=1777411109221" alt="LISTN" style="height:16px;width:auto;display:block;filter:brightness(0) invert(1);opacity:0.3;" />
+    </span>
     <span class="footer-copy">© 2025 — Emotions as Visual Language</span>
   </footer>
 
@@ -941,7 +967,7 @@
     intensity: {
       total: 23,
       ranges: [
-        { min:1,  max:6,  tags:['passionate','euphoric','electric','alive','love','excitement','joy','energy','fire','bright','warm','desire','thrill'] },
+        { min:0,  max:6,  tags:['passionate','euphoric','electric','alive','love','excitement','joy','energy','fire','bright','warm','desire','thrill'] },
         { min:7,  max:12, tags:['anger','rage','urgency','explosive','confrontational','furious','mad','hate','burst','fight','intense','force'] },
         { min:13, max:19, tags:['terror','panic','dread','dark','fury','violent','fear','anxiety','scared','horror','threat','danger','overwhelm'] },
         { min:20, max:23, tags:['grief','despair','burned','imploding','exhausted','broken','empty','numb','heavy','lost','collapsed','destroyed'] },
@@ -950,7 +976,7 @@
     calm: {
       total: 31,
       ranges: [
-        { min:1,  max:7,  tags:['serene','peaceful','dreamy','gentle','safe','tender','soft','still','quiet','rest','breathe','light','float','calm'] },
+        { min:0,  max:7,  tags:['serene','peaceful','dreamy','gentle','safe','tender','soft','still','quiet','rest','breathe','light','float','calm'] },
         { min:8,  max:13, tags:['melancholy','wistful','sad','longing','drifting','blue','missing','ache','sorrow','tearful','crying','hurt','miss'] },
         { min:14, max:21, tags:['lonely','hollow','numb','empty','disconnected','isolated','alone','invisible','distant','cold','grey','void'] },
         { min:22, max:31, tags:['dissociated','flat','exhausted','fading','detached','unreal','foggy','blank','nothing','gone','lost','absent','disappear'] },
@@ -959,7 +985,7 @@
     balance: {
       total: 32,
       ranges: [
-        { min:1,  max:7,  tags:['joy','happy','happiness','lightness','optimism','hope','excited','bright','sunshine','good','wonderful','amazing','cheerful','playful'] },
+        { min:0,  max:7,  tags:['joy','happy','happiness','lightness','optimism','hope','excited','bright','sunshine','good','wonderful','amazing','cheerful','playful'] },
         { min:8,  max:17, tags:['content','contentment','gratitude','grateful','warm','grounded','stable','thankful','whole','enough','home','safe','full','blessed'] },
         { min:18, max:24, tags:['clarity','focus','purpose','structured','clear','productive','organised','steady','precise','intentional','mindful','aware'] },
         { min:25, max:32, tags:['acceptance','okay','okayness','peace','humble','just','enough','simple','letting go','release','surrender','present','being'] },
@@ -968,7 +994,7 @@
     ambiguity: {
       total: 38,
       ranges: [
-        { min:1,  max:6,  tags:['wonder','awe','curious','curiosity','magic','dreamlike','mysterious','surreal','infinite','cosmic','vast','strange','extraordinary'] },
+        { min:0,  max:6,  tags:['wonder','awe','curious','curiosity','magic','dreamlike','mysterious','surreal','infinite','cosmic','vast','strange','extraordinary'] },
         { min:7,  max:17, tags:['nostalgia','nostalgic','bittersweet','memory','memories','past','childhood','longing','remember','forgotten','time','old','before'] },
         { min:18, max:28, tags:['duality','contradiction','conflict','torn','between','split','both','neither','ambiguous','confused','complex','mixed','opposite','two'] },
         { min:29, max:38, tags:['grief','love','dissociation','impossible','bittersweet','complicated','dont know','unsure','layers','everything','nothing','simultaneously','unresolved'] },
@@ -1316,10 +1342,10 @@
   // ─── GRID IMAGES FROM IMAGEKIT ───────────────────────────────
   // Load a sample image per emotion into each grid item on page load
   const gridSamples = {
-    intensity: [3, 8, 15],
-    calm:      [2, 10, 18],
-    balance:   [5, 12, 20],
-    ambiguity: [4, 14, 25],
+    intensity: [0, 3, 8, 15, 20],
+    calm:      [0, 2, 10, 18, 25],
+    balance:   [0, 5, 12, 20, 28],
+    ambiguity: [0, 4, 14, 25, 33],
   };
   const emotionCounters = { intensity:0, calm:0, balance:0, ambiguity:0 };
 
