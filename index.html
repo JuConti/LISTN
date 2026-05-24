@@ -170,6 +170,13 @@
     .grid-item:nth-child(12) { grid-column: 1 / 5;  grid-row: 6; aspect-ratio: 3/4; }
     .grid-item:nth-child(13) { grid-column: 5 / 9;  grid-row: 6; aspect-ratio: 3/4; }
     .grid-item:nth-child(14) { grid-column: 9 / 13; grid-row: 6; aspect-ratio: 3/4; }
+    .grid-item:nth-child(15) { grid-column: 1 / 5;  grid-row: 7; aspect-ratio: 3/4; }
+    .grid-item:nth-child(16) { grid-column: 5 / 13; grid-row: 7; aspect-ratio: 16/10; }
+    .grid-item:nth-child(17) { grid-column: 1 / 6;  grid-row: 8; aspect-ratio: 16/10; }
+    .grid-item:nth-child(18) { grid-column: 6 / 9;  grid-row: 8; aspect-ratio: 3/4; }
+    .grid-item:nth-child(19) { grid-column: 9 / 13; grid-row: 8; aspect-ratio: 3/4; }
+    .grid-item:nth-child(20) { grid-column: 1 / 8;  grid-row: 9; aspect-ratio: 16/10; }
+    .grid-item:nth-child(21) { grid-column: 8 / 13; grid-row: 9; aspect-ratio: 3/4; }
 
     .grid-item {
       position: relative; overflow: hidden; cursor: none;
@@ -836,6 +843,56 @@
         <div class="grid-emotion-tag"><span class="emotion-dot" style="background:var(--red)"></span><span class="emotion-name">Intensity</span></div>
         <div class="grid-title">Collapse</div><div class="grid-meta">by @marco_d · 6d ago</div>
       </div>
+
+    <div class="grid-item reveal" data-emotion="calm">
+      <img class="grid-img" alt="">
+      <div class="grid-overlay">
+        <div class="grid-emotion-tag"><span class="emotion-dot" style="background:var(--blue)"></span><span class="emotion-name">Calm</span></div>
+        <div class="grid-title">Vapor</div><div class="grid-meta">by @felix_r · 6d ago</div>
+      </div>
+    </div>
+    <div class="grid-item reveal" data-emotion="intensity">
+      <img class="grid-img" alt="">
+      <div class="grid-overlay">
+        <div class="grid-emotion-tag"><span class="emotion-dot" style="background:var(--red)"></span><span class="emotion-name">Intensity</span></div>
+        <div class="grid-title">Raw Edge</div><div class="grid-meta">by @marta_v · 1w ago</div>
+      </div>
+    </div>
+    <div class="grid-item reveal" data-emotion="balance">
+      <img class="grid-img" alt="">
+      <div class="grid-overlay">
+        <div class="grid-emotion-tag"><span class="emotion-dot" style="background:var(--green)"></span><span class="emotion-name">Balance</span></div>
+        <div class="grid-title">Clear Day</div><div class="grid-meta">by @ana_li · 1w ago</div>
+      </div>
+    </div>
+    <div class="grid-item reveal" data-emotion="ambiguity">
+      <img class="grid-img" alt="">
+      <div class="grid-overlay">
+        <div class="grid-emotion-tag"><span class="emotion-dot" style="background:var(--purple)"></span><span class="emotion-name">Ambiguity</span></div>
+        <div class="grid-title">Undercurrent</div><div class="grid-meta">by @tom_p · 1w ago</div>
+      </div>
+    </div>
+    <div class="grid-item reveal" data-emotion="calm">
+      <img class="grid-img" alt="">
+      <div class="grid-overlay">
+        <div class="grid-emotion-tag"><span class="emotion-dot" style="background:var(--blue)"></span><span class="emotion-name">Calm</span></div>
+        <div class="grid-title">Low Light</div><div class="grid-meta">by @lena_m · 8d ago</div>
+      </div>
+    </div>
+    <div class="grid-item reveal" data-emotion="ambiguity">
+      <img class="grid-img" alt="">
+      <div class="grid-overlay">
+        <div class="grid-emotion-tag"><span class="emotion-dot" style="background:var(--purple)"></span><span class="emotion-name">Ambiguity</span></div>
+        <div class="grid-title">Neither Yet</div><div class="grid-meta">by @daniel_o · 9d ago</div>
+      </div>
+    </div>
+    <div class="grid-item reveal" data-emotion="balance">
+      <img class="grid-img" alt="">
+      <div class="grid-overlay">
+        <div class="grid-emotion-tag"><span class="emotion-dot" style="background:var(--green)"></span><span class="emotion-name">Balance</span></div>
+        <div class="grid-title">Even Ground</div><div class="grid-meta">by @nina_t · 10d ago</div>
+      </div>
+    </div>
     </div>
     </div>
   </div>
@@ -1397,6 +1454,18 @@
     { emotion:'ambiguity', title:'Between Worlds',   author:'@daniel_o', time:'2d ago',  tags:['duality','lost','complex','between'],   color:'var(--purple)' },
     { emotion:'balance',   title:'Equilibrium',      author:'@nina_t',   time:'2d ago',  tags:['balance','stable','whole','clarity'],   color:'var(--green)'  },
     { emotion:'intensity', title:'Red Signal',       author:'@jorge_b',  time:'3d ago',  tags:['alert','power','drive','force'],        color:'var(--red)'    },
+    { emotion:'intensity', title:'Threshold',          author:'@yuki_n',   time:'4d ago',  tags:['edge','sharp','line','force'],          color:'var(--red)'    },
+    { emotion:'calm',      title:'Drift',              author:'@camille_h',time:'4d ago',  tags:['float','soft','away','distance'],       color:'var(--blue)'   },
+    { emotion:'balance',   title:'Meridian',           author:'@osei_k',   time:'5d ago',  tags:['middle','line','structure','still'],    color:'var(--green)'  },
+    { emotion:'ambiguity', title:'Echo',               author:'@reina_t',  time:'5d ago',  tags:['loop','repeat','memory','hollow'],      color:'var(--purple)' },
+    { emotion:'intensity', title:'Collapse',           author:'@marco_d',  time:'6d ago',  tags:['fall','pressure','weight','end'],       color:'var(--red)'    },
+    { emotion:'calm',      title:'Vapor',              author:'@felix_r',  time:'6d ago',  tags:['mist','soft','dissolve','quiet'],       color:'var(--blue)'   },
+    { emotion:'intensity', title:'Raw Edge',           author:'@marta_v',  time:'1w ago',  tags:['edge','sharp','raw','urgent'],          color:'var(--red)'    },
+    { emotion:'balance',   title:'Clear Day',          author:'@ana_li',   time:'1w ago',  tags:['open','light','clarity','fresh'],       color:'var(--green)'  },
+    { emotion:'ambiguity', title:'Undercurrent',       author:'@tom_p',    time:'1w ago',  tags:['hidden','beneath','pull','unknown'],    color:'var(--purple)' },
+    { emotion:'calm',      title:'Low Light',          author:'@lena_m',   time:'8d ago',  tags:['dim','quiet','rest','fade'],            color:'var(--blue)'   },
+    { emotion:'ambiguity', title:'Neither Yet',        author:'@daniel_o', time:'9d ago',  tags:['between','undecided','waiting','blur'], color:'var(--purple)' },
+    { emotion:'balance',   title:'Even Ground',        author:'@nina_t',   time:'10d ago', tags:['stable','solid','ground','steady'],     color:'var(--green)'  },
   ];
 
   const emotionColors = { intensity:'var(--red)', calm:'var(--blue)', balance:'var(--green)', ambiguity:'var(--purple)' };
