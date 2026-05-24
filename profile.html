@@ -48,13 +48,10 @@
     .reveal.visible { opacity:1; transform:translateY(0); }
 
     /* ── PROFILE HEADER ── */
-    .profile-header {
-      padding: 120px 40px 0;
-      border-bottom: 1px solid var(--grey);
-    }
+    .profile-header { padding: 120px 40px 0; border-bottom: 1px solid var(--grey); }
     .profile-top {
-      display: flex; align-items: flex-end; gap: 36px;
-      padding-bottom: 40px;
+      display: flex; align-items: flex-end; gap: 36px; padding-bottom: 40px;
+      opacity:0; animation: fadeUp .9s ease .2s forwards;
     }
     .profile-avatar {
       width: 96px; height: 96px; flex-shrink: 0; position: relative; overflow: hidden;
@@ -62,81 +59,63 @@
     .avatar-inner {
       width: 100%; height: 100%;
       background: linear-gradient(135deg, #1e0404 0%, #3a1f6a 50%, #061318 100%);
-      filter: grayscale(40%) brightness(.85);
+      filter: grayscale(30%) brightness(.85);
     }
-    .avatar-bar {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      height: 3px; background: var(--purple);
-    }
+    .avatar-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--purple); }
     .profile-info { flex: 1; }
-    .profile-handle {
-      font-size: 11px; letter-spacing: .3em; text-transform: uppercase;
-      color: var(--mid); margin-bottom: 10px;
-    }
-    .profile-name {
-      font-size: clamp(32px, 4vw, 56px); font-weight: 900;
-      letter-spacing: -.03em; text-transform: uppercase; line-height: .9;
-      color: var(--white); margin-bottom: 18px;
-    }
-    .profile-bio {
-      font-size: 13px; line-height: 1.7; color: var(--mid); max-width: 440px;
-    }
-    .profile-actions {
-      display: flex; gap: 10px; flex-shrink: 0; padding-bottom: 4px;
-    }
+    .profile-handle { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; }
+    .profile-name { font-size: clamp(32px, 4vw, 56px); font-weight: 900; letter-spacing: -.03em; text-transform: uppercase; line-height: .9; color: var(--white); margin-bottom: 18px; }
+    .profile-bio { font-size: 13px; line-height: 1.7; color: var(--mid); max-width: 440px; }
+    .profile-actions { display: flex; gap: 10px; flex-shrink: 0; padding-bottom: 4px; }
     .profile-btn {
       padding: 12px 24px; font-family: inherit; font-size: 11px; font-weight: 700;
       letter-spacing: .2em; text-transform: uppercase; cursor: none; transition: all .25s;
-      text-decoration: none; display: inline-block;
+      text-decoration: none; display: inline-block; border: none;
     }
     .profile-btn.primary { background: var(--white); color: var(--black); border: 1px solid var(--white); }
     .profile-btn.primary:hover { background: transparent; color: var(--white); }
     .profile-btn.secondary { background: transparent; color: var(--mid); border: 1px solid #3a3a3f; }
     .profile-btn.secondary:hover { border-color: rgba(249,246,240,.25); color: var(--white); }
 
-    /* ── STATS ROW ── */
+    /* ── STATS ── */
     .profile-stats {
-      display: flex; gap: 0; border-top: 1px solid var(--grey);
+      display: flex; border-top: 1px solid var(--grey);
+      opacity:0; animation: fadeUp .9s ease .38s forwards;
     }
-    .stat-item {
-      padding: 20px 32px 20px 0; display: flex; flex-direction: column; gap: 4px;
-    }
+    .stat-item { padding: 20px 32px 20px 0; display: flex; flex-direction: column; gap: 4px; }
     .stat-item + .stat-item { padding-left: 32px; border-left: 1px solid var(--grey); }
     .stat-val { font-size: 22px; font-weight: 900; letter-spacing: -.02em; color: var(--white); }
     .stat-key { font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--mid); }
 
     /* ── TABS ── */
     .profile-tabs {
-      display: flex; gap: 0; padding: 0 40px; border-bottom: 1px solid var(--grey);
+      display: flex; padding: 0 40px; border-bottom: 1px solid var(--grey);
+      opacity:0; animation: fadeUp .9s ease .52s forwards;
     }
     .tab {
       font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
       padding: 20px 0; margin-right: 36px; color: var(--mid); cursor: none;
-      border-bottom: 1px solid transparent; transition: all .25s; background: none; border-top:none; border-left:none; border-right:none;
-      font-family: inherit; font-weight: 500;
+      border: none; border-bottom: 1px solid transparent;
+      background: none; font-family: inherit; font-weight: 500; transition: all .25s;
     }
     .tab:hover { color: var(--white); }
     .tab.active { color: var(--white); border-bottom-color: var(--white); }
 
+    /* ── TAB SECTIONS ── */
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+
     /* ── WORKS GRID ── */
-    .works-section { padding: 0 40px; }
-
     .works-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 3px;
-      padding: 40px 0;
+      display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px;
+      padding: 40px 40px;
     }
-
-    /* Row 1 */
     .work-item:nth-child(1) { grid-column: 1 / 5;  aspect-ratio: 3/4; }
     .work-item:nth-child(2) { grid-column: 5 / 9;  aspect-ratio: 3/4; }
     .work-item:nth-child(3) { grid-column: 9 / 13; aspect-ratio: 3/4; }
-    /* Row 2 */
     .work-item:nth-child(4) { grid-column: 1 / 7;  aspect-ratio: 16/9; }
     .work-item:nth-child(5) { grid-column: 7 / 10; aspect-ratio: 3/4; }
     .work-item:nth-child(6) { grid-column: 10 / 13; aspect-ratio: 3/4; }
-    /* Row 3 */
     .work-item:nth-child(7) { grid-column: 1 / 5;  aspect-ratio: 16/9; }
     .work-item:nth-child(8) { grid-column: 5 / 9;  aspect-ratio: 16/9; }
     .work-item:nth-child(9) { grid-column: 9 / 13; aspect-ratio: 16/9; }
@@ -145,20 +124,16 @@
       position: relative; overflow: hidden; cursor: none;
     }
     .work-bg {
-      width: 100%; height: 100%; display: block;
+      width: 100%; height: 100%; object-fit: cover; display: block;
       filter: grayscale(100%) brightness(.88) contrast(1.05);
       transition: filter .75s cubic-bezier(.25,.46,.45,.94), transform .85s cubic-bezier(.25,.46,.45,.94);
     }
-    .work-item:hover .work-bg {
-      filter: grayscale(0%) brightness(1) contrast(1);
-      transform: scale(1.05);
-    }
+    .work-item:hover .work-bg { filter: grayscale(0%) brightness(1) contrast(1); transform: scale(1.05); }
     .work-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(to top, rgba(31,31,34,.88) 0%, transparent 52%);
-      opacity: 0; transition: opacity .5s ease;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 22px; pointer-events: none;
+      opacity: 0; transition: opacity .5s; display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 22px; pointer-events: none;
     }
     .work-item:hover .work-overlay { opacity: 1; }
     .work-emotion-tag { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
@@ -166,73 +141,143 @@
     .work-ename { font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--white); opacity: .5; }
     .work-title { font-size: 15px; font-weight: 900; letter-spacing: -.01em; color: var(--white); line-height: 1.2; margin-bottom: 4px; }
     .work-date  { font-size: 11px; color: var(--mid); letter-spacing: .05em; }
-
-    .work-item::after {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      opacity: 0; transition: opacity .5s ease;
-    }
-    .work-item[data-emotion="intensity"]::after { background: var(--red);    }
-    .work-item[data-emotion="calm"]::after      { background: var(--blue);   }
-    .work-item[data-emotion="balance"]::after   { background: var(--green);  }
+    .work-item::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; opacity:0; transition:opacity .5s; }
+    .work-item[data-emotion="intensity"]::after { background: var(--red); }
+    .work-item[data-emotion="calm"]::after      { background: var(--blue); }
+    .work-item[data-emotion="balance"]::after   { background: var(--green); }
     .work-item[data-emotion="ambiguity"]::after { background: var(--purple); }
     .work-item:hover::after { opacity: 1; }
 
-    /* ── EMOTION SIGNATURE ── */
-    .signature-section {
-      padding: 80px 40px;
-      border-top: 1px solid var(--grey);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
+    /* Share hint on hover */
+    .work-share-hint {
+      position: absolute; top: 16px; right: 16px;
+      font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(249,246,240,.55); opacity: 0; transition: opacity .4s;
+      pointer-events: none;
     }
-    .sig-label {
-      font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
-      color: var(--mid); margin-bottom: 20px;
-    }
-    .sig-title {
-      font-size: clamp(28px, 3vw, 44px); font-weight: 900;
-      letter-spacing: -.025em; text-transform: uppercase; line-height: .93;
-      color: var(--white); margin-bottom: 20px;
-    }
-    .sig-title em { font-style: italic; font-weight: 400; color: var(--mid); }
-    .sig-desc { font-size: 13px; line-height: 1.75; color: var(--mid); }
+    .work-item:hover .work-share-hint { opacity: 1; }
 
-    .emotion-bars { display: flex; flex-direction: column; gap: 18px; }
-    .ebar-row { display: flex; flex-direction: column; gap: 8px; }
-    .ebar-top {
-      display: flex; justify-content: space-between; align-items: center;
+    /* ── SAVED GRID ── */
+    .saved-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
+      padding: 40px 40px;
     }
-    .ebar-name { font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--mid); }
-    .ebar-pct  { font-size: 11px; font-weight: 500; color: var(--white); letter-spacing: .05em; }
-    .ebar-track { height: 2px; background: #2a2a2e; position: relative; }
-    .ebar-fill  { position: absolute; top: 0; left: 0; height: 100%; transition: width 1.2s cubic-bezier(.25,.46,.45,.94); width: 0; }
-    .ebar-fill.intensity { background: var(--red); }
-    .ebar-fill.calm      { background: var(--blue); }
-    .ebar-fill.balance   { background: var(--green); }
-    .ebar-fill.ambiguity { background: var(--purple); }
+    .saved-item { position: relative; overflow: hidden; cursor: none; aspect-ratio: 1/1; }
+    .saved-bg { width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(100%) brightness(.88) contrast(1.05); transition: filter .75s cubic-bezier(.25,.46,.45,.94), transform .85s cubic-bezier(.25,.46,.45,.94); }
+    .saved-item:hover .saved-bg { filter:grayscale(0%) brightness(1) contrast(1); transform:scale(1.05); }
+    .saved-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(31,31,34,.88) 0%, transparent 52%); opacity:0; transition:opacity .5s; display:flex; flex-direction:column; justify-content:flex-end; padding:18px; pointer-events:none; }
+    .saved-item:hover .saved-overlay { opacity:1; }
+    .saved-title { font-size:14px; font-weight:900; letter-spacing:-.01em; color:var(--white); margin-bottom:3px; }
+    .saved-author { font-size:11px; color:var(--mid); }
+    .saved-item::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; opacity:0; transition:opacity .5s; }
+    .saved-item[data-emotion="intensity"]::after { background:var(--red); }
+    .saved-item[data-emotion="calm"]::after      { background:var(--blue); }
+    .saved-item[data-emotion="balance"]::after   { background:var(--green); }
+    .saved-item[data-emotion="ambiguity"]::after { background:var(--purple); }
+    .saved-item:hover::after { opacity:1; }
+
+    /* ── ABOUT ── */
+    .about-section {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+      padding: 64px 40px;
+    }
+    .about-label { font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--mid); margin-bottom:20px; display:block; }
+    .about-bio { font-size:16px; line-height:1.75; color:var(--white); margin-bottom:36px; }
+    .about-details { display:flex; flex-direction:column; gap:16px; }
+    .about-detail { display:flex; gap:16px; align-items:flex-start; }
+    .about-detail-key { font-size:10px; letter-spacing:.25em; text-transform:uppercase; color:var(--mid); width:80px; flex-shrink:0; padding-top:2px; }
+    .about-detail-val { font-size:13px; color:rgba(249,246,240,.7); }
+    .about-detail-val a { color:var(--white); text-decoration:none; border-bottom:1px solid rgba(249,246,240,.2); padding-bottom:1px; transition:border-color .25s; }
+    .about-detail-val a:hover { border-color:var(--white); }
+    .sig-label { font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--mid); margin-bottom:20px; display:block; }
+    .sig-title { font-size:clamp(22px,2.5vw,36px); font-weight:900; letter-spacing:-.025em; text-transform:uppercase; line-height:.93; color:var(--white); margin-bottom:32px; }
+    .sig-title em { font-style:italic; font-weight:400; color:var(--mid); }
+    .emotion-bars { display:flex; flex-direction:column; gap:18px; }
+    .ebar-row { display:flex; flex-direction:column; gap:8px; }
+    .ebar-top { display:flex; justify-content:space-between; }
+    .ebar-name { font-size:10px; letter-spacing:.25em; text-transform:uppercase; color:var(--mid); }
+    .ebar-pct  { font-size:11px; font-weight:500; color:var(--white); }
+    .ebar-track { height:2px; background:#2a2a2e; position:relative; }
+    .ebar-fill  { position:absolute; top:0; left:0; height:100%; transition:width 1.2s cubic-bezier(.25,.46,.45,.94); width:0; }
+    .ebar-fill.intensity { background:var(--red); }
+    .ebar-fill.calm      { background:var(--blue); }
+    .ebar-fill.balance   { background:var(--green); }
+    .ebar-fill.ambiguity { background:var(--purple); }
+
+    /* ── EDIT PROFILE MODAL ── */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 800;
+      background: rgba(10,10,10,0); backdrop-filter: blur(0px);
+      pointer-events: none; transition: background .4s, backdrop-filter .4s;
+    }
+    .modal-backdrop.open { background: rgba(10,10,10,.88); backdrop-filter: blur(12px); pointer-events: all; }
+    .modal {
+      position: fixed; top: 50%; left: 50%; z-index: 801;
+      transform: translate(-50%, -50%) scale(.95);
+      background: var(--grey); width: min(520px, 90vw);
+      padding: 48px; opacity: 0; pointer-events: none;
+      transition: opacity .35s, transform .35s cubic-bezier(.25,.46,.45,.94);
+    }
+    .modal.open { opacity: 1; transform: translate(-50%,-50%) scale(1); pointer-events: all; }
+    .modal-title { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--mid); margin-bottom:32px; }
+    .modal-field { margin-bottom:20px; }
+    .modal-label { font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--mid); display:block; margin-bottom:10px; }
+    .modal-input, .modal-textarea {
+      width:100%; background:#3a3a3f; border:1px solid #4a4a50; padding:14px 16px;
+      color:var(--white); font-family:inherit; font-size:14px; outline:none;
+      transition:border-color .25s; caret-color:var(--white);
+    }
+    .modal-textarea { resize:vertical; min-height:80px; }
+    .modal-input:focus, .modal-textarea:focus { border-color:rgba(249,246,240,.25); }
+    .modal-input::placeholder, .modal-textarea::placeholder { color:#666; }
+    .modal-actions { display:flex; gap:12px; margin-top:32px; }
+    .modal-save {
+      flex:1; padding:15px; background:var(--white); color:var(--black);
+      font-family:inherit; font-size:11px; font-weight:900; letter-spacing:.25em;
+      text-transform:uppercase; border:none; cursor:none; transition:all .25s;
+      position:relative; overflow:hidden;
+    }
+    .modal-save::after { content:''; position:absolute; inset:0; background:var(--black); transform:translateX(-101%); transition:transform .35s cubic-bezier(.76,0,.24,1); }
+    .modal-save:hover { color:var(--white); }
+    .modal-save:hover::after { transform:translateX(0); }
+    .modal-save span { position:relative; z-index:1; }
+    .modal-cancel { padding:15px 24px; background:transparent; border:1px solid #4a4a50; color:var(--mid); font-family:inherit; font-size:11px; letter-spacing:.2em; text-transform:uppercase; cursor:none; transition:all .25s; }
+    .modal-cancel:hover { border-color:rgba(249,246,240,.2); color:var(--white); }
 
     /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--grey); padding: 40px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .footer-logo { display: inline-block; opacity: .3; }
-    .footer-logo img { height: 16px; width: auto; display: block; filter: brightness(0) invert(1); }
-    .footer-copy { font-size: 11px; color: #333; letter-spacing: .1em; }
+    footer { border-top:1px solid var(--grey); padding:40px; display:flex; justify-content:space-between; align-items:center; }
+    .footer-logo { display:inline-block; opacity:.3; }
+    .footer-logo img { height:16px; width:auto; display:block; filter:brightness(0) invert(1); }
+    .footer-copy { font-size:11px; color:#333; letter-spacing:.1em; }
 
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(18px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-    .profile-top    { opacity:0; animation:fadeUp .9s ease .2s forwards; }
-    .profile-stats  { opacity:0; animation:fadeUp .9s ease .4s forwards; }
-    .profile-tabs   { opacity:0; animation:fadeUp .9s ease .55s forwards; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
   </style>
 </head>
 <body>
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- EDIT PROFILE MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <div class="modal" id="editModal">
+    <p class="modal-title">Edit profile</p>
+    <div class="modal-field">
+      <label class="modal-label" for="editName">Display name</label>
+      <input class="modal-input" id="editName" type="text" value="Julia Conti" />
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="editHandle">Handle</label>
+      <input class="modal-input" id="editHandle" type="text" value="@julia_c" />
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="editBio">Bio</label>
+      <textarea class="modal-textarea" id="editBio" placeholder="How would you describe yourself?">Making sense of feeling through form. Mostly ambiguity, sometimes calm, occasionally on fire.</textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-save" id="modalSave"><span>Save changes</span></button>
+      <button class="modal-cancel" id="modalCancel">Cancel</button>
+    </div>
+  </div>
 
   <nav>
     <a href="index.html" class="nav-logo">
@@ -254,45 +299,37 @@
         <div class="avatar-bar"></div>
       </div>
       <div class="profile-info">
-        <p class="profile-handle">@julia_c</p>
-        <h1 class="profile-name">Julia Conti</h1>
-        <p class="profile-bio">Making sense of feeling through form. Mostly ambiguity, sometimes calm, occasionally on fire.</p>
+        <p class="profile-handle" id="displayHandle">@julia_c</p>
+        <h1 class="profile-name" id="displayName">Julia Conti</h1>
+        <p class="profile-bio" id="displayBio">Making sense of feeling through form. Mostly ambiguity, sometimes calm, occasionally on fire.</p>
       </div>
       <div class="profile-actions">
         <a href="index.html#create" class="profile-btn primary">Create piece</a>
-        <button class="profile-btn secondary">Edit profile</button>
+        <button class="profile-btn secondary" id="editProfileBtn">Edit profile</button>
       </div>
     </div>
-
     <div class="profile-stats">
-      <div class="stat-item">
-        <span class="stat-val">23</span>
-        <span class="stat-key">Pieces</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-val">847</span>
-        <span class="stat-key">Followers</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-val">203</span>
-        <span class="stat-key">Following</span>
-      </div>
+      <div class="stat-item"><span class="stat-val">23</span><span class="stat-key">Pieces</span></div>
+      <div class="stat-item"><span class="stat-val">847</span><span class="stat-key">Followers</span></div>
+      <div class="stat-item"><span class="stat-val">203</span><span class="stat-key">Following</span></div>
     </div>
   </div>
 
   <!-- TABS -->
   <div class="profile-tabs">
-    <button class="tab active">Works</button>
-    <button class="tab">Saved</button>
-    <button class="tab">About</button>
+    <button class="tab active" data-tab="works">Works</button>
+    <button class="tab" data-tab="saved">Saved</button>
+    <button class="tab" data-tab="about">About</button>
   </div>
 
-  <!-- WORKS GRID -->
-  <div class="works-section">
+  <!-- WORKS TAB -->
+  <div id="tab-works" class="tab-section active">
     <div class="works-grid">
 
-      <div class="work-item reveal" data-emotion="ambiguity">
-        <div class="work-bg" style="background:linear-gradient(135deg,#060310,#180d2e,#0d0718)"></div>
+      <div class="work-item reveal" data-emotion="ambiguity"
+           data-title="Between States" data-time="2 days ago" data-num="22">
+        <img class="work-bg" alt="Between States" />
+        <div class="work-share-hint">Share ↗</div>
         <div class="work-overlay">
           <div class="work-emotion-tag"><span class="work-dot" style="background:var(--purple)"></span><span class="work-ename">Ambiguity</span></div>
           <div class="work-title">Between States</div>
@@ -300,8 +337,10 @@
         </div>
       </div>
 
-      <div class="work-item reveal" data-emotion="calm">
-        <div class="work-bg" style="background:linear-gradient(155deg,#020a0d,#0c1f25,#061318)"></div>
+      <div class="work-item reveal" data-emotion="calm"
+           data-title="Afternoon Fog" data-time="5 days ago" data-num="16">
+        <img class="work-bg" alt="Afternoon Fog" />
+        <div class="work-share-hint">Share ↗</div>
         <div class="work-overlay">
           <div class="work-emotion-tag"><span class="work-dot" style="background:var(--blue)"></span><span class="work-ename">Calm</span></div>
           <div class="work-title">Afternoon Fog</div>
@@ -309,8 +348,10 @@
         </div>
       </div>
 
-      <div class="work-item reveal" data-emotion="intensity">
-        <div class="work-bg" style="background:linear-gradient(135deg,#080000,#1e0404,#0c0101)"></div>
+      <div class="work-item reveal" data-emotion="intensity"
+           data-title="Before the Break" data-time="1 week ago" data-num="14">
+        <img class="work-bg" alt="Before the Break" />
+        <div class="work-share-hint">Share ↗</div>
         <div class="work-overlay">
           <div class="work-emotion-tag"><span class="work-dot" style="background:var(--red)"></span><span class="work-ename">Intensity</span></div>
           <div class="work-title">Before the Break</div>
@@ -318,8 +359,10 @@
         </div>
       </div>
 
-      <div class="work-item reveal" data-emotion="balance">
-        <div class="work-bg" style="background:linear-gradient(145deg,#020604,#091a10,#030c06)"></div>
+      <div class="work-item reveal" data-emotion="balance"
+           data-title="Sunday Morning" data-time="2 weeks ago" data-num="03">
+        <img class="work-bg" alt="Sunday Morning" />
+        <div class="work-share-hint">Share ↗</div>
         <div class="work-overlay">
           <div class="work-emotion-tag"><span class="work-dot" style="background:var(--green)"></span><span class="work-ename">Balance</span></div>
           <div class="work-title">Sunday Morning</div>
@@ -327,8 +370,10 @@
         </div>
       </div>
 
-      <div class="work-item reveal" data-emotion="ambiguity">
-        <div class="work-bg" style="background:radial-gradient(ellipse at 55% 50%,#180d2e,#0d0718,#060310)"></div>
+      <div class="work-item reveal" data-emotion="ambiguity"
+           data-title="Signal Lost" data-time="3 weeks ago" data-num="11">
+        <img class="work-bg" alt="Signal Lost" />
+        <div class="work-share-hint">Share ↗</div>
         <div class="work-overlay">
           <div class="work-emotion-tag"><span class="work-dot" style="background:var(--purple)"></span><span class="work-ename">Ambiguity</span></div>
           <div class="work-title">Signal Lost</div>
@@ -336,8 +381,10 @@
         </div>
       </div>
 
-      <div class="work-item reveal" data-emotion="intensity">
-        <div class="work-bg" style="background:radial-gradient(ellipse at 30% 40%,#3d0808,#080000)"></div>
+      <div class="work-item reveal" data-emotion="intensity"
+           data-title="No Exit" data-time="1 month ago" data-num="09">
+        <img class="work-bg" alt="No Exit" />
+        <div class="work-share-hint">Share ↗</div>
         <div class="work-overlay">
           <div class="work-emotion-tag"><span class="work-dot" style="background:var(--red)"></span><span class="work-ename">Intensity</span></div>
           <div class="work-title">No Exit</div>
@@ -345,8 +392,10 @@
         </div>
       </div>
 
-      <div class="work-item reveal" data-emotion="calm">
-        <div class="work-bg" style="background:linear-gradient(160deg,#020a0d,#061a25,#020a0d)"></div>
+      <div class="work-item reveal" data-emotion="calm"
+           data-title="Low Tide" data-time="6 weeks ago" data-num="04">
+        <img class="work-bg" alt="Low Tide" />
+        <div class="work-share-hint">Share ↗</div>
         <div class="work-overlay">
           <div class="work-emotion-tag"><span class="work-dot" style="background:var(--blue)"></span><span class="work-ename">Calm</span></div>
           <div class="work-title">Low Tide</div>
@@ -354,8 +403,10 @@
         </div>
       </div>
 
-      <div class="work-item reveal" data-emotion="balance">
-        <div class="work-bg" style="background:linear-gradient(150deg,#030c06,#07140c,#020604)"></div>
+      <div class="work-item reveal" data-emotion="balance"
+           data-title="Enough" data-time="2 months ago" data-num="27">
+        <img class="work-bg" alt="Enough" />
+        <div class="work-share-hint">Share ↗</div>
         <div class="work-overlay">
           <div class="work-emotion-tag"><span class="work-dot" style="background:var(--green)"></span><span class="work-ename">Balance</span></div>
           <div class="work-title">Enough</div>
@@ -363,8 +414,10 @@
         </div>
       </div>
 
-      <div class="work-item reveal" data-emotion="ambiguity">
-        <div class="work-bg" style="background:linear-gradient(125deg,#060310,#1a0d30,#0a0518)"></div>
+      <div class="work-item reveal" data-emotion="ambiguity"
+           data-title="First Memory" data-time="3 months ago" data-num="02">
+        <img class="work-bg" alt="First Memory" />
+        <div class="work-share-hint">Share ↗</div>
         <div class="work-overlay">
           <div class="work-emotion-tag"><span class="work-dot" style="background:var(--purple)"></span><span class="work-ename">Ambiguity</span></div>
           <div class="work-title">First Memory</div>
@@ -375,41 +428,109 @@
     </div>
   </div>
 
-  <!-- EMOTION SIGNATURE -->
-  <div class="signature-section">
-    <div class="reveal">
-      <p class="sig-label">Your emotional signature</p>
-      <h2 class="sig-title">How you<br>feel, <em>mapped.</em></h2>
-      <p class="sig-desc">A breakdown of every emotion you've translated into form — a pattern unique to you, built piece by piece over time.</p>
+  <!-- SAVED TAB -->
+  <div id="tab-saved" class="tab-section">
+    <div class="saved-grid">
+
+      <div class="saved-item reveal" data-emotion="calm" data-title="Signal Fade" data-num="23">
+        <img class="saved-bg" alt="Signal Fade" />
+        <div class="saved-overlay">
+          <div class="saved-title">Signal Fade</div>
+          <div class="saved-author">by @felix_r</div>
+        </div>
+      </div>
+
+      <div class="saved-item reveal" data-emotion="intensity" data-title="Electric" data-num="02">
+        <img class="saved-bg" alt="Electric" />
+        <div class="saved-overlay">
+          <div class="saved-title">Electric</div>
+          <div class="saved-author">by @marta_v</div>
+        </div>
+      </div>
+
+      <div class="saved-item reveal" data-emotion="balance" data-title="Grateful" data-num="10">
+        <img class="saved-bg" alt="Grateful" />
+        <div class="saved-overlay">
+          <div class="saved-title">Grateful</div>
+          <div class="saved-author">by @ana_li</div>
+        </div>
+      </div>
+
+      <div class="saved-item reveal" data-emotion="ambiguity" data-title="1997" data-num="08">
+        <img class="saved-bg" alt="1997" />
+        <div class="saved-overlay">
+          <div class="saved-title">1997</div>
+          <div class="saved-author">by @tom_p</div>
+        </div>
+      </div>
+
+      <div class="saved-item reveal" data-emotion="calm" data-title="Still Missing" data-num="12">
+        <img class="saved-bg" alt="Still Missing" />
+        <div class="saved-overlay">
+          <div class="saved-title">Still Missing</div>
+          <div class="saved-author">by @lena_m</div>
+        </div>
+      </div>
+
+      <div class="saved-item reveal" data-emotion="intensity" data-title="Ash" data-num="21">
+        <img class="saved-bg" alt="Ash" />
+        <div class="saved-overlay">
+          <div class="saved-title">Ash</div>
+          <div class="saved-author">by @sara_k</div>
+        </div>
+      </div>
+
     </div>
-    <div class="emotion-bars reveal">
-      <div class="ebar-row">
-        <div class="ebar-top">
-          <span class="ebar-name">Ambiguity</span>
-          <span class="ebar-pct">44%</span>
+  </div>
+
+  <!-- ABOUT TAB -->
+  <div id="tab-about" class="tab-section">
+    <div class="about-section">
+      <div class="about-left reveal">
+        <span class="about-label">About</span>
+        <p class="about-bio">Making sense of feeling through form. I use LISTN to externalise what I can't put into words — mostly ambiguity, sometimes calm, occasionally on fire.<br><br>Art has always been the language I trust more than speech. These pieces are notes to myself, made public.</p>
+        <div class="about-details">
+          <div class="about-detail">
+            <span class="about-detail-key">Joined</span>
+            <span class="about-detail-val">March 2025</span>
+          </div>
+          <div class="about-detail">
+            <span class="about-detail-key">Location</span>
+            <span class="about-detail-val">Barcelona, Spain</span>
+          </div>
+          <div class="about-detail">
+            <span class="about-detail-key">Dominant</span>
+            <span class="about-detail-val" style="color:var(--purple)">Ambiguity — 44%</span>
+          </div>
+          <div class="about-detail">
+            <span class="about-detail-key">Links</span>
+            <span class="about-detail-val">
+              <a href="#">juliaconti.com</a> &nbsp;·&nbsp; <a href="#">@julia.c</a>
+            </span>
+          </div>
         </div>
-        <div class="ebar-track"><div class="ebar-fill ambiguity" data-width="44"></div></div>
       </div>
-      <div class="ebar-row">
-        <div class="ebar-top">
-          <span class="ebar-name">Calm</span>
-          <span class="ebar-pct">28%</span>
+      <div class="about-right reveal">
+        <span class="sig-label">Emotional signature</span>
+        <h2 class="sig-title">How you<br>feel, <em>mapped.</em></h2>
+        <div class="emotion-bars">
+          <div class="ebar-row">
+            <div class="ebar-top"><span class="ebar-name">Ambiguity</span><span class="ebar-pct">44%</span></div>
+            <div class="ebar-track"><div class="ebar-fill ambiguity" data-width="44"></div></div>
+          </div>
+          <div class="ebar-row">
+            <div class="ebar-top"><span class="ebar-name">Calm</span><span class="ebar-pct">28%</span></div>
+            <div class="ebar-track"><div class="ebar-fill calm" data-width="28"></div></div>
+          </div>
+          <div class="ebar-row">
+            <div class="ebar-top"><span class="ebar-name">Intensity</span><span class="ebar-pct">18%</span></div>
+            <div class="ebar-track"><div class="ebar-fill intensity" data-width="18"></div></div>
+          </div>
+          <div class="ebar-row">
+            <div class="ebar-top"><span class="ebar-name">Balance</span><span class="ebar-pct">10%</span></div>
+            <div class="ebar-track"><div class="ebar-fill balance" data-width="10"></div></div>
+          </div>
         </div>
-        <div class="ebar-track"><div class="ebar-fill calm" data-width="28"></div></div>
-      </div>
-      <div class="ebar-row">
-        <div class="ebar-top">
-          <span class="ebar-name">Intensity</span>
-          <span class="ebar-pct">18%</span>
-        </div>
-        <div class="ebar-track"><div class="ebar-fill intensity" data-width="18"></div></div>
-      </div>
-      <div class="ebar-row">
-        <div class="ebar-top">
-          <span class="ebar-name">Balance</span>
-          <span class="ebar-pct">10%</span>
-        </div>
-        <div class="ebar-track"><div class="ebar-fill balance" data-width="10"></div></div>
       </div>
     </div>
   </div>
@@ -423,37 +544,98 @@
   </footer>
 
   <script>
+    // ── IMAGEKIT ──────────────────────────────────────────────
+    const IK_BASE   = 'https://ik.imagekit.io/qppkb7d3b';
+    const IK_PARAMS = '?tr=q-85,f-auto,w-800';
+    function ikUrl(emotion, num) {
+      const n = String(num).padStart(2, '0');
+      return IK_BASE + '/' + emotion + '/' + emotion + '_' + n + IK_PARAMS;
+    }
+
+    // ── CURSOR ──────────────────────────────────────────────
     const cursor = document.getElementById('cursor');
     const ring   = document.getElementById('cursorRing');
     let mx=0,my=0,rx=0,ry=0;
     document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
     (function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
 
-    // Reveal on scroll
-    const obs = new IntersectionObserver((entries) => {
+    // ── LOAD IMAGES ──────────────────────────────────────────
+    document.querySelectorAll('.work-item').forEach(item => {
+      const emotion = item.dataset.emotion;
+      const num     = parseInt(item.dataset.num, 10);
+      item.querySelector('.work-bg').src = ikUrl(emotion, num);
+    });
+    document.querySelectorAll('.saved-item').forEach(item => {
+      const emotion = item.dataset.emotion;
+      const num     = parseInt(item.dataset.num, 10);
+      item.querySelector('.saved-bg').src = ikUrl(emotion, num);
+    });
+
+    // ── REVEAL ON SCROLL ─────────────────────────────────────
+    const revealObs = new IntersectionObserver((entries) => {
       entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 60); });
     }, { threshold: 0.06 });
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-    // Animate emotion bars when visible
-    const barObs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.querySelectorAll('.ebar-fill').forEach(fill => {
-            fill.style.width = fill.dataset.width + '%';
-          });
-          barObs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.3 });
-    document.querySelectorAll('.emotion-bars').forEach(el => barObs.observe(el));
-
-    // Tab switching
+    // ── TABS ─────────────────────────────────────────────────
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
+        const target = tab.dataset.tab;
+        document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-' + target).classList.add('active');
+        // Re-trigger reveals in newly visible section
+        document.querySelectorAll('#tab-' + target + ' .reveal').forEach(el => {
+          el.classList.remove('visible');
+          revealObs.observe(el);
+        });
+        // Trigger emotion bars when About tab opens
+        if (target === 'about') {
+          setTimeout(() => {
+            document.querySelectorAll('.ebar-fill').forEach(fill => {
+              fill.style.width = fill.dataset.width + '%';
+            });
+          }, 300);
+        }
       });
+    });
+
+    // ── WORK ITEM CLICK → SHARE ──────────────────────────────
+    const emotionColors = { intensity:'#c0392b', calm:'#9ed5de', balance:'#265e55', ambiguity:'#7b5ea7' };
+    document.querySelectorAll('.work-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const emotion   = item.dataset.emotion;
+        const title     = item.dataset.title;
+        const time      = item.dataset.time;
+        const num       = parseInt(item.dataset.num, 10);
+        const imageUrl  = ikUrl(emotion, num).replace(IK_PARAMS, '?tr=q-85,f-auto,w-1400');
+        const piece = { emotion, title, author: '@julia_c', time, imageUrl };
+        try { localStorage.setItem('listn_share_piece', JSON.stringify(piece)); } catch(e) {}
+        window.location.href = 'share.html';
+      });
+    });
+
+    // ── EDIT PROFILE MODAL ───────────────────────────────────
+    const backdrop = document.getElementById('modalBackdrop');
+    const modal    = document.getElementById('editModal');
+
+    function openModal() { backdrop.classList.add('open'); modal.classList.add('open'); }
+    function closeModal() { backdrop.classList.remove('open'); modal.classList.remove('open'); }
+
+    document.getElementById('editProfileBtn').addEventListener('click', openModal);
+    backdrop.addEventListener('click', closeModal);
+    document.getElementById('modalCancel').addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    document.getElementById('modalSave').addEventListener('click', () => {
+      const name   = document.getElementById('editName').value.trim();
+      const handle = document.getElementById('editHandle').value.trim();
+      const bio    = document.getElementById('editBio').value.trim();
+      if (name)   document.getElementById('displayName').textContent   = name;
+      if (handle) document.getElementById('displayHandle').textContent = handle;
+      if (bio)    document.getElementById('displayBio').textContent    = bio;
+      closeModal();
     });
   </script>
 </body>

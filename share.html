@@ -394,17 +394,26 @@
       document.querySelector('.artwork-bg-blur').style.background    = grad;
       document.getElementById('artworkDiv').style.background         = grad;
 
-      // If there's a canvas image from localStorage
-      if (piece.image) {
+      // Display artwork: imageUrl = ImageKit URL (from profile), image = base64 (from generator)
+      const artDiv    = document.getElementById('artworkDiv');
+      const artCanvas = document.getElementById('artworkCanvas');
+
+      if (piece.imageUrl) {
+        // Show as <img> tag
+        const imgEl = document.createElement('img');
+        imgEl.src = piece.imageUrl;
+        imgEl.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+        artDiv.replaceWith(imgEl);
+      } else if (piece.image) {
+        // Canvas base64 from the generator
         const img = new Image();
         img.src = piece.image;
         img.onload = () => {
-          const canvas = document.getElementById('artworkCanvas');
-          canvas.width  = img.naturalWidth;
-          canvas.height = img.naturalHeight;
-          canvas.getContext('2d').drawImage(img, 0, 0);
-          canvas.style.display = 'block';
-          document.getElementById('artworkDiv').style.display = 'none';
+          artCanvas.width  = img.naturalWidth;
+          artCanvas.height = img.naturalHeight;
+          artCanvas.getContext('2d').drawImage(img, 0, 0);
+          artCanvas.style.display = 'block';
+          artDiv.style.display = 'none';
         };
       }
 
@@ -447,15 +456,21 @@
 
     // ── DOWNLOAD ──
     document.getElementById('downloadBtn').addEventListener('click', () => {
-      const canvas = document.getElementById('artworkCanvas');
-      if (canvas.style.display !== 'none') {
+      const canvas  = document.getElementById('artworkCanvas');
+      const imgEl   = document.querySelector('.artwork-canvas-wrap img');
+      const piece   = (() => { try { return JSON.parse(localStorage.getItem('listn_share_piece')); } catch(e){ return null; } })();
+
+      if (canvas && canvas.style.display !== 'none') {
+        // Canvas (generated artwork)
         const a = document.createElement('a');
         a.href = canvas.toDataURL('image/png');
         a.download = 'listn-piece.png';
         a.click();
-      } else {
-        // Fallback: tell user no canvas available
-        document.getElementById('downloadBtn').textContent = 'Generate a piece first';
+      } else if (piece && piece.imageUrl) {
+        // ImageKit URL — open in new tab (cross-origin download)
+        window.open(piece.imageUrl, '_blank');
+      } else if (imgEl) {
+        window.open(imgEl.src, '_blank');
       }
     });
 
