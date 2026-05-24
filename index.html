@@ -712,7 +712,7 @@
     <div class="hero-bg"></div>
     <div class="hero-eyebrow">Emotions as visual language</div>
     <h1 class="hero-title">Feel.<br><em>Listened.</em></h1>
-    <p class="hero-sub">A platform that transforms human emotions into generative artworks. Type how you feel — and the system creates a unique composition from your inner state.</p>
+    <p class="hero-sub">A platform that transforms human emotions into generative artworks. Type how you feel, and the system creates a unique composition from your inner state.</p>
     <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
   </section>
 
@@ -741,7 +741,7 @@
   <!-- FEED HEADER -->
   <div class="section-header reveal" id="feed">
     <span class="section-label">Emotional Feed</span>
-    <span class="section-count" id="feedCount">— 247 pieces</span>
+    <span class="section-count" id="feedCount">247 pieces</span>
   </div>
 
   <!-- GRID -->
@@ -902,7 +902,7 @@
     <div class="create-left">
       <div class="create-eyebrow">Express yourself</div>
       <h2 class="create-title">Your emotion<br><em>becomes</em><br>your art</h2>
-      <p class="create-desc">Type a feeling, a word, or a sentence. The system reads your emotional state, maps it to one of four visual languages, and generates a unique piece — yours alone.</p>
+      <p class="create-desc">Type a feeling, a word, or a sentence. The system reads your emotional state, maps it to one of four visual languages, and generates a unique piece, yours alone.</p>
     </div>
     <div class="create-right">
       <div class="emotion-input-wrap" style="position:relative">
@@ -957,21 +957,21 @@
       <div class="preview-hero-bottom">
 
         <div class="preview-hero-left">
-          <span class="preview-emotion-name" id="metaEmotion">—</span>
+          <span class="preview-emotion-name" id="metaEmotion"></span>
           <div class="preview-title">Feel.<br><em id="previewEmotionItalic">Listened.</em></div>
           <div class="preview-input-echo" id="previewInputEcho">Your emotion, translated into form.</div>
           <div class="preview-meta-row">
             <div class="meta-item">
               <span class="meta-key">Palette</span>
-              <span class="meta-val" id="metaPalette">—</span>
+              <span class="meta-val" id="metaPalette"></span>
             </div>
             <div class="meta-item">
               <span class="meta-key">Generated</span>
-              <span class="meta-val" id="metaTime">—</span>
+              <span class="meta-val" id="metaTime"></span>
             </div>
             <div class="meta-item">
               <span class="meta-key">Seed</span>
-              <span class="meta-val" id="metaSeed">—</span>
+              <span class="meta-val" id="metaSeed"></span>
             </div>
           </div>
         </div>
@@ -988,7 +988,7 @@
 
     <!-- Info strip below hero -->
     <div class="preview-strip">
-      <span class="preview-strip-left">LISTN — Emotional Archive</span>
+      <span class="preview-strip-left">LISTN Emotional Archive</span>
       <span class="preview-strip-right" id="metaPiece">Generated just now</span>
     </div>
 
@@ -1048,7 +1048,7 @@
     <span class="footer-logo">
       <img src="https://ik.imagekit.io/qppkb7d3b/logo/Logo%20TFG.svg?updatedAt=1777411109221" alt="LISTN" style="height:16px;width:auto;display:block;filter:brightness(0) invert(1);opacity:0.3;" />
     </span>
-    <span class="footer-copy">© 2025 — Emotions as Visual Language</span>
+    <span class="footer-copy">© 2025 Emotions as Visual Language</span>
   </footer>
 
   <script>
@@ -1552,7 +1552,7 @@
 
     // Feed count
     let count=247;
-    setInterval(()=>{ if(Math.random()>.7){count++;const el=document.getElementById('feedCount');if(el)el.textContent='— '+count+' pieces';} },8000);
+    setInterval(()=>{ if(Math.random()>.7){count++;const el=document.getElementById('feedCount');if(el)el.textContent=count+' pieces';} },8000);
 
   });
 
