@@ -692,10 +692,11 @@
       <img src="https://ik.imagekit.io/qppkb7d3b/logo/Logo%20TFG.svg?updatedAt=1777411109221" alt="LISTN" style="height:28px;width:auto;display:block;filter:brightness(0) invert(1);" />
     </a>
     <div class="nav-right">
-      <a href="#feed"   class="nav-link active">Feed</a>
-      <a href="#create" class="nav-link">Create</a>
-      <a href="#system" class="nav-link">System</a>
-      <a href="#"       class="nav-link">Sign in</a>
+      <a href="#feed"      class="nav-link active">Feed</a>
+      <a href="#create"    class="nav-link">Create</a>
+      <a href="#system"    class="nav-link">System</a>
+      <a href="profile.html" class="nav-link">Profile</a>
+      <a href="signin.html"  class="nav-link">Sign in</a>
     </div>
   </nav>
 
@@ -920,6 +921,7 @@
 
         <div class="preview-hero-right">
           <button class="preview-btn primary" id="saveBtn">Save artwork ↓</button>
+          <button class="preview-btn" id="shareBtn">Share with friends ↗</button>
           <button class="preview-btn" id="regenBtn">New variation ↻</button>
           <a href="#create" class="preview-btn">Try another →</a>
         </div>
@@ -1338,6 +1340,26 @@
     link.href = canvas.toDataURL('image/png');
     link.click();
     setTimeout(()=>generate(currentType, document.getElementById('emotionText').value, currentSeed),200);
+  });
+
+  // ─── SHARE ───────────────────────────────────────────────────
+  document.getElementById('shareBtn').addEventListener('click', () => {
+    if (!currentType) return;
+    if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+    const canvas  = document.getElementById('previewCanvas');
+    const imgData = canvas.toDataURL('image/png');
+    const text    = document.getElementById('emotionText').value || '';
+    const piece   = {
+      emotion: currentType,
+      title:   document.getElementById('previewEmotionItalic')
+                 ? (document.getElementById('previewEmotionItalic').textContent || currentType) : currentType,
+      author:  '@you',
+      time:    'just now',
+      image:   imgData,
+      text:    text,
+    };
+    try { localStorage.setItem('listn_share_piece', JSON.stringify(piece)); } catch(e) {}
+    window.location.href = 'share.html';
   });
 
   // ─── CURSOR ──────────────────────────────────────────────────

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LISTN — Profile</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:    #c0392b;
+      --blue:   #9ed5de;
+      --green:  #265e55;
+      --purple: #7b5ea7;
+      --black:  #1f1f22;
+      --white:  #f9f6f0;
+      --grey:   #2e2e32;
+      --mid:    #888;
+      --dim:    #444;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CURSOR ── */
+    .cursor { position:fixed; width:10px; height:10px; background:var(--white); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .3s, height .3s; mix-blend-mode:difference; }
+    .cursor-ring { position:fixed; width:38px; height:38px; border:1px solid rgba(249,246,240,.35); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .3s, height .3s, opacity .3s; }
+    body:has(.work-item:hover) .cursor { width:56px; height:56px; }
+    body:has(.work-item:hover) .cursor-ring { width:80px; height:80px; opacity:.25; }
+
+    /* ── NOISE ── */
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:1000; opacity:.3; }
+
+    /* ── NAV ── */
+    nav { position:fixed; top:0; left:0; right:0; z-index:500; display:flex; align-items:center; justify-content:space-between; padding:24px 40px; mix-blend-mode:difference; }
+    .nav-logo img { height:28px; width:auto; display:block; filter:brightness(0) invert(1); }
+    .nav-right { display:flex; gap:40px; align-items:center; }
+    .nav-link { font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--white); text-decoration:none; opacity:.45; transition:opacity .3s; }
+    .nav-link:hover, .nav-link.active { opacity:1; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ── PROFILE HEADER ── */
+    .profile-header {
+      padding: 120px 40px 0;
+      border-bottom: 1px solid var(--grey);
+    }
+    .profile-top {
+      display: flex; align-items: flex-end; gap: 36px;
+      padding-bottom: 40px;
+    }
+    .profile-avatar {
+      width: 96px; height: 96px; flex-shrink: 0; position: relative; overflow: hidden;
+    }
+    .avatar-inner {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #1e0404 0%, #3a1f6a 50%, #061318 100%);
+      filter: grayscale(40%) brightness(.85);
+    }
+    .avatar-bar {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: var(--purple);
+    }
+    .profile-info { flex: 1; }
+    .profile-handle {
+      font-size: 11px; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 10px;
+    }
+    .profile-name {
+      font-size: clamp(32px, 4vw, 56px); font-weight: 900;
+      letter-spacing: -.03em; text-transform: uppercase; line-height: .9;
+      color: var(--white); margin-bottom: 18px;
+    }
+    .profile-bio {
+      font-size: 13px; line-height: 1.7; color: var(--mid); max-width: 440px;
+    }
+    .profile-actions {
+      display: flex; gap: 10px; flex-shrink: 0; padding-bottom: 4px;
+    }
+    .profile-btn {
+      padding: 12px 24px; font-family: inherit; font-size: 11px; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase; cursor: none; transition: all .25s;
+      text-decoration: none; display: inline-block;
+    }
+    .profile-btn.primary { background: var(--white); color: var(--black); border: 1px solid var(--white); }
+    .profile-btn.primary:hover { background: transparent; color: var(--white); }
+    .profile-btn.secondary { background: transparent; color: var(--mid); border: 1px solid #3a3a3f; }
+    .profile-btn.secondary:hover { border-color: rgba(249,246,240,.25); color: var(--white); }
+
+    /* ── STATS ROW ── */
+    .profile-stats {
+      display: flex; gap: 0; border-top: 1px solid var(--grey);
+    }
+    .stat-item {
+      padding: 20px 32px 20px 0; display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-item + .stat-item { padding-left: 32px; border-left: 1px solid var(--grey); }
+    .stat-val { font-size: 22px; font-weight: 900; letter-spacing: -.02em; color: var(--white); }
+    .stat-key { font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--mid); }
+
+    /* ── TABS ── */
+    .profile-tabs {
+      display: flex; gap: 0; padding: 0 40px; border-bottom: 1px solid var(--grey);
+    }
+    .tab {
+      font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+      padding: 20px 0; margin-right: 36px; color: var(--mid); cursor: none;
+      border-bottom: 1px solid transparent; transition: all .25s; background: none; border-top:none; border-left:none; border-right:none;
+      font-family: inherit; font-weight: 500;
+    }
+    .tab:hover { color: var(--white); }
+    .tab.active { color: var(--white); border-bottom-color: var(--white); }
+
+    /* ── WORKS GRID ── */
+    .works-section { padding: 0 40px; }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 3px;
+      padding: 40px 0;
+    }
+
+    /* Row 1 */
+    .work-item:nth-child(1) { grid-column: 1 / 5;  aspect-ratio: 3/4; }
+    .work-item:nth-child(2) { grid-column: 5 / 9;  aspect-ratio: 3/4; }
+    .work-item:nth-child(3) { grid-column: 9 / 13; aspect-ratio: 3/4; }
+    /* Row 2 */
+    .work-item:nth-child(4) { grid-column: 1 / 7;  aspect-ratio: 16/9; }
+    .work-item:nth-child(5) { grid-column: 7 / 10; aspect-ratio: 3/4; }
+    .work-item:nth-child(6) { grid-column: 10 / 13; aspect-ratio: 3/4; }
+    /* Row 3 */
+    .work-item:nth-child(7) { grid-column: 1 / 5;  aspect-ratio: 16/9; }
+    .work-item:nth-child(8) { grid-column: 5 / 9;  aspect-ratio: 16/9; }
+    .work-item:nth-child(9) { grid-column: 9 / 13; aspect-ratio: 16/9; }
+
+    .work-item {
+      position: relative; overflow: hidden; cursor: none;
+    }
+    .work-bg {
+      width: 100%; height: 100%; display: block;
+      filter: grayscale(100%) brightness(.88) contrast(1.05);
+      transition: filter .75s cubic-bezier(.25,.46,.45,.94), transform .85s cubic-bezier(.25,.46,.45,.94);
+    }
+    .work-item:hover .work-bg {
+      filter: grayscale(0%) brightness(1) contrast(1);
+      transform: scale(1.05);
+    }
+    .work-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(31,31,34,.88) 0%, transparent 52%);
+      opacity: 0; transition: opacity .5s ease;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 22px; pointer-events: none;
+    }
+    .work-item:hover .work-overlay { opacity: 1; }
+    .work-emotion-tag { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+    .work-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .work-ename { font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--white); opacity: .5; }
+    .work-title { font-size: 15px; font-weight: 900; letter-spacing: -.01em; color: var(--white); line-height: 1.2; margin-bottom: 4px; }
+    .work-date  { font-size: 11px; color: var(--mid); letter-spacing: .05em; }
+
+    .work-item::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      opacity: 0; transition: opacity .5s ease;
+    }
+    .work-item[data-emotion="intensity"]::after { background: var(--red);    }
+    .work-item[data-emotion="calm"]::after      { background: var(--blue);   }
+    .work-item[data-emotion="balance"]::after   { background: var(--green);  }
+    .work-item[data-emotion="ambiguity"]::after { background: var(--purple); }
+    .work-item:hover::after { opacity: 1; }
+
+    /* ── EMOTION SIGNATURE ── */
+    .signature-section {
+      padding: 80px 40px;
+      border-top: 1px solid var(--grey);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .sig-label {
+      font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 20px;
+    }
+    .sig-title {
+      font-size: clamp(28px, 3vw, 44px); font-weight: 900;
+      letter-spacing: -.025em; text-transform: uppercase; line-height: .93;
+      color: var(--white); margin-bottom: 20px;
+    }
+    .sig-title em { font-style: italic; font-weight: 400; color: var(--mid); }
+    .sig-desc { font-size: 13px; line-height: 1.75; color: var(--mid); }
+
+    .emotion-bars { display: flex; flex-direction: column; gap: 18px; }
+    .ebar-row { display: flex; flex-direction: column; gap: 8px; }
+    .ebar-top {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .ebar-name { font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--mid); }
+    .ebar-pct  { font-size: 11px; font-weight: 500; color: var(--white); letter-spacing: .05em; }
+    .ebar-track { height: 2px; background: #2a2a2e; position: relative; }
+    .ebar-fill  { position: absolute; top: 0; left: 0; height: 100%; transition: width 1.2s cubic-bezier(.25,.46,.45,.94); width: 0; }
+    .ebar-fill.intensity { background: var(--red); }
+    .ebar-fill.calm      { background: var(--blue); }
+    .ebar-fill.balance   { background: var(--green); }
+    .ebar-fill.ambiguity { background: var(--purple); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--grey); padding: 40px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo { display: inline-block; opacity: .3; }
+    .footer-logo img { height: 16px; width: auto; display: block; filter: brightness(0) invert(1); }
+    .footer-copy { font-size: 11px; color: #333; letter-spacing: .1em; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .profile-top    { opacity:0; animation:fadeUp .9s ease .2s forwards; }
+    .profile-stats  { opacity:0; animation:fadeUp .9s ease .4s forwards; }
+    .profile-tabs   { opacity:0; animation:fadeUp .9s ease .55s forwards; }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="https://ik.imagekit.io/qppkb7d3b/logo/Logo%20TFG.svg?updatedAt=1777411109221" alt="LISTN" />
+    </a>
+    <div class="nav-right">
+      <a href="index.html#feed"   class="nav-link">Feed</a>
+      <a href="index.html#create" class="nav-link">Create</a>
+      <a href="profile.html"      class="nav-link active">Profile</a>
+      <a href="signin.html"       class="nav-link">Sign in</a>
+    </div>
+  </nav>
+
+  <!-- PROFILE HEADER -->
+  <div class="profile-header">
+    <div class="profile-top">
+      <div class="profile-avatar">
+        <div class="avatar-inner"></div>
+        <div class="avatar-bar"></div>
+      </div>
+      <div class="profile-info">
+        <p class="profile-handle">@julia_c</p>
+        <h1 class="profile-name">Julia Conti</h1>
+        <p class="profile-bio">Making sense of feeling through form. Mostly ambiguity, sometimes calm, occasionally on fire.</p>
+      </div>
+      <div class="profile-actions">
+        <a href="index.html#create" class="profile-btn primary">Create piece</a>
+        <button class="profile-btn secondary">Edit profile</button>
+      </div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="stat-item">
+        <span class="stat-val">23</span>
+        <span class="stat-key">Pieces</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">847</span>
+        <span class="stat-key">Followers</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">203</span>
+        <span class="stat-key">Following</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="profile-tabs">
+    <button class="tab active">Works</button>
+    <button class="tab">Saved</button>
+    <button class="tab">About</button>
+  </div>
+
+  <!-- WORKS GRID -->
+  <div class="works-section">
+    <div class="works-grid">
+
+      <div class="work-item reveal" data-emotion="ambiguity">
+        <div class="work-bg" style="background:linear-gradient(135deg,#060310,#180d2e,#0d0718)"></div>
+        <div class="work-overlay">
+          <div class="work-emotion-tag"><span class="work-dot" style="background:var(--purple)"></span><span class="work-ename">Ambiguity</span></div>
+          <div class="work-title">Between States</div>
+          <div class="work-date">2 days ago</div>
+        </div>
+      </div>
+
+      <div class="work-item reveal" data-emotion="calm">
+        <div class="work-bg" style="background:linear-gradient(155deg,#020a0d,#0c1f25,#061318)"></div>
+        <div class="work-overlay">
+          <div class="work-emotion-tag"><span class="work-dot" style="background:var(--blue)"></span><span class="work-ename">Calm</span></div>
+          <div class="work-title">Afternoon Fog</div>
+          <div class="work-date">5 days ago</div>
+        </div>
+      </div>
+
+      <div class="work-item reveal" data-emotion="intensity">
+        <div class="work-bg" style="background:linear-gradient(135deg,#080000,#1e0404,#0c0101)"></div>
+        <div class="work-overlay">
+          <div class="work-emotion-tag"><span class="work-dot" style="background:var(--red)"></span><span class="work-ename">Intensity</span></div>
+          <div class="work-title">Before the Break</div>
+          <div class="work-date">1 week ago</div>
+        </div>
+      </div>
+
+      <div class="work-item reveal" data-emotion="balance">
+        <div class="work-bg" style="background:linear-gradient(145deg,#020604,#091a10,#030c06)"></div>
+        <div class="work-overlay">
+          <div class="work-emotion-tag"><span class="work-dot" style="background:var(--green)"></span><span class="work-ename">Balance</span></div>
+          <div class="work-title">Sunday Morning</div>
+          <div class="work-date">2 weeks ago</div>
+        </div>
+      </div>
+
+      <div class="work-item reveal" data-emotion="ambiguity">
+        <div class="work-bg" style="background:radial-gradient(ellipse at 55% 50%,#180d2e,#0d0718,#060310)"></div>
+        <div class="work-overlay">
+          <div class="work-emotion-tag"><span class="work-dot" style="background:var(--purple)"></span><span class="work-ename">Ambiguity</span></div>
+          <div class="work-title">Signal Lost</div>
+          <div class="work-date">3 weeks ago</div>
+        </div>
+      </div>
+
+      <div class="work-item reveal" data-emotion="intensity">
+        <div class="work-bg" style="background:radial-gradient(ellipse at 30% 40%,#3d0808,#080000)"></div>
+        <div class="work-overlay">
+          <div class="work-emotion-tag"><span class="work-dot" style="background:var(--red)"></span><span class="work-ename">Intensity</span></div>
+          <div class="work-title">No Exit</div>
+          <div class="work-date">1 month ago</div>
+        </div>
+      </div>
+
+      <div class="work-item reveal" data-emotion="calm">
+        <div class="work-bg" style="background:linear-gradient(160deg,#020a0d,#061a25,#020a0d)"></div>
+        <div class="work-overlay">
+          <div class="work-emotion-tag"><span class="work-dot" style="background:var(--blue)"></span><span class="work-ename">Calm</span></div>
+          <div class="work-title">Low Tide</div>
+          <div class="work-date">6 weeks ago</div>
+        </div>
+      </div>
+
+      <div class="work-item reveal" data-emotion="balance">
+        <div class="work-bg" style="background:linear-gradient(150deg,#030c06,#07140c,#020604)"></div>
+        <div class="work-overlay">
+          <div class="work-emotion-tag"><span class="work-dot" style="background:var(--green)"></span><span class="work-ename">Balance</span></div>
+          <div class="work-title">Enough</div>
+          <div class="work-date">2 months ago</div>
+        </div>
+      </div>
+
+      <div class="work-item reveal" data-emotion="ambiguity">
+        <div class="work-bg" style="background:linear-gradient(125deg,#060310,#1a0d30,#0a0518)"></div>
+        <div class="work-overlay">
+          <div class="work-emotion-tag"><span class="work-dot" style="background:var(--purple)"></span><span class="work-ename">Ambiguity</span></div>
+          <div class="work-title">First Memory</div>
+          <div class="work-date">3 months ago</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EMOTION SIGNATURE -->
+  <div class="signature-section">
+    <div class="reveal">
+      <p class="sig-label">Your emotional signature</p>
+      <h2 class="sig-title">How you<br>feel, <em>mapped.</em></h2>
+      <p class="sig-desc">A breakdown of every emotion you've translated into form — a pattern unique to you, built piece by piece over time.</p>
+    </div>
+    <div class="emotion-bars reveal">
+      <div class="ebar-row">
+        <div class="ebar-top">
+          <span class="ebar-name">Ambiguity</span>
+          <span class="ebar-pct">44%</span>
+        </div>
+        <div class="ebar-track"><div class="ebar-fill ambiguity" data-width="44"></div></div>
+      </div>
+      <div class="ebar-row">
+        <div class="ebar-top">
+          <span class="ebar-name">Calm</span>
+          <span class="ebar-pct">28%</span>
+        </div>
+        <div class="ebar-track"><div class="ebar-fill calm" data-width="28"></div></div>
+      </div>
+      <div class="ebar-row">
+        <div class="ebar-top">
+          <span class="ebar-name">Intensity</span>
+          <span class="ebar-pct">18%</span>
+        </div>
+        <div class="ebar-track"><div class="ebar-fill intensity" data-width="18"></div></div>
+      </div>
+      <div class="ebar-row">
+        <div class="ebar-top">
+          <span class="ebar-name">Balance</span>
+          <span class="ebar-pct">10%</span>
+        </div>
+        <div class="ebar-track"><div class="ebar-fill balance" data-width="10"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">
+      <img src="https://ik.imagekit.io/qppkb7d3b/logo/Logo%20TFG.svg?updatedAt=1777411109221" alt="LISTN" />
+    </span>
+    <span class="footer-copy">© 2025 — Emotions as Visual Language</span>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursorRing');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+
+    // Reveal on scroll
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 60); });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // Animate emotion bars when visible
+    const barObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.ebar-fill').forEach(fill => {
+            fill.style.width = fill.dataset.width + '%';
+          });
+          barObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.emotion-bars').forEach(el => barObs.observe(el));
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

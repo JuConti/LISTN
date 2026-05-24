@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LISTN — Sign In</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:    #c0392b;
+      --blue:   #9ed5de;
+      --green:  #265e55;
+      --purple: #7b5ea7;
+      --black:  #1f1f22;
+      --white:  #f9f6f0;
+      --grey:   #2e2e32;
+      --mid:    #888;
+      --dim:    #444;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+      cursor: none;
+      min-height: 100vh;
+    }
+
+    /* ── CURSOR ── */
+    .cursor { position:fixed; width:10px; height:10px; background:var(--white); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .3s, height .3s; mix-blend-mode:difference; }
+    .cursor-ring { position:fixed; width:38px; height:38px; border:1px solid rgba(249,246,240,.35); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .3s, height .3s, opacity .3s; }
+
+    /* ── NOISE ── */
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:1000; opacity:.3; }
+
+    /* ── NAV ── */
+    nav { position:fixed; top:0; left:0; right:0; z-index:500; display:flex; align-items:center; justify-content:space-between; padding:24px 40px; mix-blend-mode:difference; }
+    .nav-logo img { height:28px; width:auto; display:block; filter:brightness(0) invert(1); }
+    .nav-right { display:flex; gap:40px; align-items:center; }
+    .nav-link { font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--white); text-decoration:none; opacity:.45; transition:opacity .3s; }
+    .nav-link:hover, .nav-link.active { opacity:1; }
+
+    /* ── LAYOUT ── */
+    .signin-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── LEFT PANEL ── */
+    .signin-left {
+      background: #161618;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 120px 64px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .signin-left-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 60%, rgba(123,94,167,.09) 0%, transparent 65%),
+                  radial-gradient(ellipse at 80% 20%, rgba(192,57,43,.06) 0%, transparent 55%);
+    }
+    .left-eyebrow {
+      font-size: 10px; letter-spacing: .35em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 24px; position: relative;
+      opacity: 0; animation: fadeUp .9s ease .2s forwards;
+    }
+    .left-headline {
+      font-size: clamp(52px, 5.5vw, 88px);
+      font-weight: 900; line-height: .87;
+      letter-spacing: -.035em; text-transform: uppercase;
+      color: var(--white); margin-bottom: 32px; position: relative;
+      opacity: 0; animation: fadeUp .9s ease .35s forwards;
+    }
+    .left-headline em { font-style: italic; font-weight: 400; color: var(--mid); }
+    .left-tagline {
+      font-size: 13px; line-height: 1.8; color: var(--mid);
+      max-width: 320px; margin-bottom: 52px; position: relative;
+      opacity: 0; animation: fadeUp .9s ease .5s forwards;
+    }
+    .emotion-tags {
+      display: flex; gap: 8px; flex-wrap: wrap; position: relative;
+      opacity: 0; animation: fadeUp .9s ease .65s forwards;
+    }
+    .etag {
+      font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+      padding: 6px 14px; border: 1px solid transparent;
+    }
+    .etag[data-e="intensity"] { border-color: rgba(192,57,43,.3);  color: rgba(192,57,43,.55); }
+    .etag[data-e="calm"]      { border-color: rgba(158,213,222,.25); color: rgba(158,213,222,.5); }
+    .etag[data-e="balance"]   { border-color: rgba(38,94,85,.4);    color: rgba(38,94,85,.65); }
+    .etag[data-e="ambiguity"] { border-color: rgba(123,94,167,.3);  color: rgba(123,94,167,.55); }
+
+    /* ── RIGHT PANEL ── */
+    .signin-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 64px 64px;
+    }
+    .form-eyebrow {
+      font-size: 10px; letter-spacing: .35em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 28px;
+      opacity: 0; animation: fadeUp .9s ease .3s forwards;
+    }
+    .form-title {
+      font-size: clamp(36px, 3.5vw, 56px); font-weight: 900;
+      letter-spacing: -.03em; text-transform: uppercase;
+      color: var(--white); margin-bottom: 48px; line-height: .9;
+      opacity: 0; animation: fadeUp .9s ease .45s forwards;
+    }
+
+    .field-wrap {
+      margin-bottom: 20px;
+      opacity: 0; animation: fadeUp .9s ease .6s forwards;
+    }
+    .field-wrap + .field-wrap { animation-delay: .68s; }
+    .field-label {
+      font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--mid); display: block; margin-bottom: 10px;
+    }
+    .field-input {
+      width: 100%; background: var(--grey); border: 1px solid #3a3a3f;
+      padding: 16px 18px; color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 15px; outline: none; transition: border-color .25s;
+      caret-color: var(--white);
+    }
+    .field-input::placeholder { color: #555; }
+    .field-input:focus { border-color: rgba(249,246,240,.25); }
+    .field-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
+    .field-link { font-size: 11px; color: var(--mid); text-decoration: none; letter-spacing: .05em; transition: color .25s; }
+    .field-link:hover { color: var(--white); }
+
+    .submit-btn {
+      width: 100%; margin-top: 32px; padding: 18px;
+      background: var(--white); color: var(--black);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 12px; font-weight: 900; letter-spacing: .3em; text-transform: uppercase;
+      border: none; cursor: none; position: relative; overflow: hidden;
+      opacity: 0; animation: fadeUp .9s ease .78s forwards;
+    }
+    .submit-btn::after {
+      content: ''; position: absolute; inset: 0; background: var(--black);
+      transform: translateX(-101%); transition: transform .42s cubic-bezier(.76,0,.24,1);
+    }
+    .submit-btn:hover { color: var(--white); }
+    .submit-btn:hover::after { transform: translateX(0); }
+    .submit-btn span { position: relative; z-index: 1; }
+
+    .divider {
+      display: flex; align-items: center; gap: 16px; margin: 32px 0;
+      color: var(--dim); font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+      opacity: 0; animation: fadeUp .9s ease .88s forwards;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--grey); }
+
+    .social-btns {
+      display: flex; gap: 12px;
+      opacity: 0; animation: fadeUp .9s ease .96s forwards;
+    }
+    .social-btn {
+      flex: 1; padding: 14px; background: transparent; border: 1px solid #3a3a3f;
+      color: var(--mid); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase;
+      cursor: none; transition: all .25s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .social-btn:hover { border-color: rgba(249,246,240,.25); color: var(--white); }
+    .social-btn svg { flex-shrink: 0; }
+
+    .signup-prompt {
+      margin-top: 40px; font-size: 12px; color: var(--mid); letter-spacing: .05em;
+      opacity: 0; animation: fadeUp .9s ease 1.05s forwards;
+    }
+    .signup-prompt a {
+      color: var(--white); text-decoration: none; font-weight: 500;
+      border-bottom: 1px solid rgba(249,246,240,.2); padding-bottom: 1px; transition: border-color .25s;
+    }
+    .signup-prompt a:hover { border-color: var(--white); }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="https://ik.imagekit.io/qppkb7d3b/logo/Logo%20TFG.svg?updatedAt=1777411109221" alt="LISTN" />
+    </a>
+    <div class="nav-right">
+      <a href="index.html#feed"   class="nav-link">Feed</a>
+      <a href="index.html#create" class="nav-link">Create</a>
+      <a href="signin.html"       class="nav-link active">Sign in</a>
+    </div>
+  </nav>
+
+  <div class="signin-wrap">
+
+    <!-- LEFT -->
+    <div class="signin-left">
+      <div class="signin-left-bg"></div>
+      <p class="left-eyebrow">Welcome back</p>
+      <h2 class="left-headline">Your<br>emotions<br><em>await.</em></h2>
+      <p class="left-tagline">Every piece you've created carries the weight of how you felt in that moment. Sign back in to find them.</p>
+      <div class="emotion-tags">
+        <span class="etag" data-e="intensity">Intensity</span>
+        <span class="etag" data-e="calm">Calm</span>
+        <span class="etag" data-e="balance">Balance</span>
+        <span class="etag" data-e="ambiguity">Ambiguity</span>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="signin-right">
+      <p class="form-eyebrow">Access your account</p>
+      <h1 class="form-title">Sign<br>in.</h1>
+
+      <div class="field-wrap">
+        <label class="field-label" for="email">Email address</label>
+        <input class="field-input" id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+
+      <div class="field-wrap">
+        <label class="field-label" for="password">Password</label>
+        <input class="field-input" id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+        <div class="field-footer">
+          <a href="#" class="field-link">Forgot password?</a>
+        </div>
+      </div>
+
+      <button class="submit-btn"><span>Sign in</span></button>
+
+      <div class="divider">or continue with</div>
+
+      <div class="social-btns">
+        <button class="social-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google
+        </button>
+        <button class="social-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Apple
+        </button>
+      </div>
+
+      <p class="signup-prompt">New to LISTN? <a href="#">Create an account</a></p>
+    </div>
+
+  </div>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursorRing');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+  </script>
+</body>
+</html>

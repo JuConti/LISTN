@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LISTN — Share this piece</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:    #c0392b;
+      --blue:   #9ed5de;
+      --green:  #265e55;
+      --purple: #7b5ea7;
+      --black:  #1f1f22;
+      --white:  #f9f6f0;
+      --grey:   #2e2e32;
+      --mid:    #888;
+      --dim:    #444;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+      cursor: none;
+      min-height: 100vh;
+    }
+
+    /* ── CURSOR ── */
+    .cursor { position:fixed; width:10px; height:10px; background:var(--white); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .3s, height .3s; mix-blend-mode:difference; }
+    .cursor-ring { position:fixed; width:38px; height:38px; border:1px solid rgba(249,246,240,.35); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .3s, height .3s, opacity .3s; }
+
+    /* ── NOISE ── */
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:1000; opacity:.3; }
+
+    /* ── NAV ── */
+    nav { position:fixed; top:0; left:0; right:0; z-index:500; display:flex; align-items:center; justify-content:space-between; padding:24px 40px; mix-blend-mode:difference; }
+    .nav-logo img { height:28px; width:auto; display:block; filter:brightness(0) invert(1); }
+    .nav-right { display:flex; gap:40px; align-items:center; }
+    .nav-link { font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--white); text-decoration:none; opacity:.45; transition:opacity .3s; }
+    .nav-link:hover, .nav-link.active { opacity:1; }
+    .nav-back { display:flex; align-items:center; gap:10px; }
+    .nav-back svg { opacity:.45; transition:opacity .3s; }
+    .nav-back:hover svg { opacity:1; }
+
+    /* ── MAIN LAYOUT ── */
+    .share-layout {
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      min-height: 100vh;
+    }
+
+    /* ── ARTWORK PANEL ── */
+    .artwork-panel {
+      position: relative;
+      background: #080808;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 100vh;
+    }
+    .artwork-bg-blur {
+      position: absolute; inset: -40px;
+      background: var(--artwork-bg, linear-gradient(135deg,#060310,#180d2e,#0d0718));
+      filter: blur(60px) brightness(.4);
+      transform: scale(1.2);
+    }
+    .artwork-canvas-wrap {
+      position: relative; z-index: 1;
+      width: min(560px, 85%);
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+    }
+    .artwork-display {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .artwork-display-div {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg,#060310,#180d2e,#0d0718);
+    }
+    .artwork-emotion-bar {
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--purple);
+    }
+
+    /* Top-left badge */
+    .artwork-badge {
+      position: absolute; top: 40px; left: 40px; z-index: 2;
+      display: flex; align-items: center; gap: 10px;
+      opacity: 0; animation: fadeUp .9s ease .3s forwards;
+    }
+    .artwork-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--purple); }
+    .artwork-badge-label { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(249,246,240,.45); }
+
+    /* ── SHARE PANEL ── */
+    .share-panel {
+      border-left: 1px solid var(--grey);
+      display: flex;
+      flex-direction: column;
+      padding: 100px 48px 48px;
+      overflow-y: auto;
+    }
+
+    .share-eyebrow {
+      font-size: 10px; letter-spacing: .35em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 20px;
+      opacity: 0; animation: fadeUp .9s ease .2s forwards;
+    }
+    .share-title {
+      font-size: clamp(32px, 3vw, 48px); font-weight: 900;
+      letter-spacing: -.03em; text-transform: uppercase; line-height: .9;
+      color: var(--white); margin-bottom: 10px;
+      opacity: 0; animation: fadeUp .9s ease .35s forwards;
+    }
+    .share-piece-meta {
+      font-size: 12px; color: var(--mid); letter-spacing: .05em; margin-bottom: 40px;
+      opacity: 0; animation: fadeUp .9s ease .45s forwards;
+    }
+    .share-piece-meta span { color: rgba(249,246,240,.5); }
+
+    .share-divider {
+      height: 1px; background: var(--grey); margin-bottom: 32px;
+      opacity: 0; animation: fadeUp .9s ease .5s forwards;
+    }
+
+    /* Copy link */
+    .copy-section {
+      margin-bottom: 32px;
+      opacity: 0; animation: fadeUp .9s ease .55s forwards;
+    }
+    .copy-label { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; display: block; }
+    .copy-row { display: flex; gap: 0; }
+    .copy-input {
+      flex: 1; background: var(--grey); border: 1px solid #3a3a3f; border-right: none;
+      padding: 14px 16px; color: var(--mid);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 12px; outline: none; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis; letter-spacing: .03em;
+    }
+    .copy-btn {
+      padding: 14px 20px; background: var(--white); color: var(--black);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 10px; font-weight: 900; letter-spacing: .25em; text-transform: uppercase;
+      border: 1px solid var(--white); cursor: none; transition: all .25s; white-space: nowrap;
+      position: relative; overflow: hidden;
+    }
+    .copy-btn::after {
+      content: ''; position: absolute; inset: 0; background: var(--black);
+      transform: translateX(-101%); transition: transform .35s cubic-bezier(.76,0,.24,1);
+    }
+    .copy-btn:hover { color: var(--white); }
+    .copy-btn:hover::after { transform: translateX(0); }
+    .copy-btn span { position: relative; z-index: 1; }
+    .copy-confirm {
+      font-size: 11px; color: var(--green); letter-spacing: .1em; margin-top: 8px;
+      opacity: 0; transition: opacity .3s; height: 16px;
+    }
+    .copy-confirm.visible { opacity: 1; }
+
+    /* Send to friend */
+    .send-section {
+      margin-bottom: 32px;
+      opacity: 0; animation: fadeUp .9s ease .63s forwards;
+    }
+    .send-label { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; display: block; }
+    .send-row { display: flex; gap: 0; }
+    .send-input {
+      flex: 1; background: var(--grey); border: 1px solid #3a3a3f; border-right: none;
+      padding: 14px 16px; color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 13px; outline: none; transition: border-color .25s;
+      caret-color: var(--white);
+    }
+    .send-input::placeholder { color: #555; }
+    .send-input:focus { border-color: rgba(249,246,240,.2); }
+    .send-btn {
+      padding: 14px 20px; background: transparent; color: var(--mid);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 10px; font-weight: 700; letter-spacing: .25em; text-transform: uppercase;
+      border: 1px solid #3a3a3f; cursor: none; transition: all .25s; white-space: nowrap;
+    }
+    .send-btn:hover { border-color: rgba(249,246,240,.25); color: var(--white); }
+
+    /* Social share */
+    .social-section {
+      margin-bottom: 40px;
+      opacity: 0; animation: fadeUp .9s ease .72s forwards;
+    }
+    .social-label { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; display: block; }
+    .social-row { display: flex; gap: 8px; }
+    .social-share-btn {
+      flex: 1; padding: 13px 16px; background: transparent; border: 1px solid #3a3a3f;
+      color: var(--mid); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase;
+      cursor: none; transition: all .25s; display: flex; align-items: center;
+      justify-content: center; gap: 8px; text-decoration: none;
+    }
+    .social-share-btn:hover { border-color: rgba(249,246,240,.25); color: var(--white); }
+
+    /* Download */
+    .download-btn {
+      width: 100%; padding: 16px; background: transparent; border: 1px solid #3a3a3f;
+      color: var(--mid); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: .25em; text-transform: uppercase;
+      cursor: none; transition: all .25s; margin-bottom: 40px; display: flex;
+      align-items: center; justify-content: center; gap: 10px;
+      opacity: 0; animation: fadeUp .9s ease .8s forwards;
+    }
+    .download-btn:hover { border-color: rgba(249,246,240,.25); color: var(--white); }
+
+    /* Proof + CTA */
+    .proof-strip {
+      margin-top: auto; padding-top: 32px; border-top: 1px solid var(--grey);
+      opacity: 0; animation: fadeUp .9s ease .9s forwards;
+    }
+    .proof-count {
+      font-size: 11px; color: var(--mid); letter-spacing: .1em; margin-bottom: 20px;
+    }
+    .proof-count strong { color: var(--white); }
+    .cta-btn {
+      display: block; width: 100%; padding: 18px; background: var(--white); color: var(--black);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 12px; font-weight: 900; letter-spacing: .3em; text-transform: uppercase;
+      text-decoration: none; text-align: center; cursor: none;
+      position: relative; overflow: hidden; transition: color .3s;
+    }
+    .cta-btn::after {
+      content: ''; position: absolute; inset: 0; background: var(--black);
+      transform: translateX(-101%); transition: transform .42s cubic-bezier(.76,0,.24,1);
+    }
+    .cta-btn:hover { color: var(--white); }
+    .cta-btn:hover::after { transform: translateX(0); }
+    .cta-btn span { position: relative; z-index: 1; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo nav-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="#f9f6f0" stroke-width="1.2"/></svg>
+      <img src="https://ik.imagekit.io/qppkb7d3b/logo/Logo%20TFG.svg?updatedAt=1777411109221" alt="LISTN" />
+    </a>
+    <div class="nav-right">
+      <a href="index.html#feed"   class="nav-link">Feed</a>
+      <a href="index.html#create" class="nav-link">Create</a>
+      <a href="signin.html"       class="nav-link">Sign in</a>
+    </div>
+  </nav>
+
+  <div class="share-layout">
+
+    <!-- ARTWORK -->
+    <div class="artwork-panel" id="artworkPanel">
+      <div class="artwork-bg-blur" id="artworkBgBlur"></div>
+      <div class="artwork-badge">
+        <div class="artwork-badge-dot" id="artworkBadgeDot"></div>
+        <span class="artwork-badge-label" id="artworkBadgeLabel">Ambiguity</span>
+      </div>
+      <div class="artwork-canvas-wrap">
+        <div class="artwork-emotion-bar" id="artworkEmotionBar"></div>
+        <canvas id="artworkCanvas" class="artwork-display" style="display:none"></canvas>
+        <div class="artwork-display-div" id="artworkDiv"></div>
+      </div>
+    </div>
+
+    <!-- SHARE PANEL -->
+    <div class="share-panel">
+      <p class="share-eyebrow">Share this piece</p>
+      <h1 class="share-title" id="shareTitle">Between<br>Worlds.</h1>
+      <p class="share-piece-meta">
+        by <span id="shareAuthor">@julia_c</span> &nbsp;·&nbsp;
+        <span id="shareEmotion">Ambiguity</span> &nbsp;·&nbsp;
+        <span id="shareTime">just now</span>
+      </p>
+
+      <div class="share-divider"></div>
+
+      <!-- Copy link -->
+      <div class="copy-section">
+        <span class="copy-label">Share link</span>
+        <div class="copy-row">
+          <div class="copy-input" id="shareUrl">listn.art/p/between-worlds</div>
+          <button class="copy-btn" id="copyBtn"><span>Copy</span></button>
+        </div>
+        <p class="copy-confirm" id="copyConfirm">Link copied to clipboard</p>
+      </div>
+
+      <!-- Send to friend -->
+      <div class="send-section">
+        <span class="send-label">Send to a friend</span>
+        <div class="send-row">
+          <input class="send-input" id="sendInput" type="text" placeholder="Enter email or @username" />
+          <button class="send-btn" id="sendBtn">Send</button>
+        </div>
+      </div>
+
+      <!-- Social share -->
+      <div class="social-section">
+        <span class="social-label">Also share via</span>
+        <div class="social-row">
+          <a href="#" class="social-share-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            X / Twitter
+          </a>
+          <a href="#" class="social-share-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            Instagram
+          </a>
+        </div>
+      </div>
+
+      <!-- Download -->
+      <button class="download-btn" id="downloadBtn">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M3 13h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Download image
+      </button>
+
+      <!-- Proof + CTA -->
+      <div class="proof-strip">
+        <p class="proof-count"><strong id="proofCount">1,284</strong> people have felt something similar</p>
+        <a href="index.html#create" class="cta-btn"><span>Feel something? Create yours</span></a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── CURSOR ──
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursorRing');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+
+    // ── EMOTION COLORS ──
+    const emotionColors = { intensity:'#c0392b', calm:'#9ed5de', balance:'#265e55', ambiguity:'#7b5ea7' };
+    const emotionNames  = { intensity:'Intensity', calm:'Calm', balance:'Balance', ambiguity:'Ambiguity' };
+    const emotionGradients = {
+      intensity: 'linear-gradient(135deg,#080000,#1e0404,#0c0101)',
+      calm:      'linear-gradient(155deg,#020a0d,#0c1f25,#061318)',
+      balance:   'linear-gradient(145deg,#020604,#091a10,#030c06)',
+      ambiguity: 'linear-gradient(135deg,#060310,#180d2e,#0d0718)',
+    };
+
+    // ── LOAD PIECE DATA ──
+    // Reads from localStorage if the user just generated something in index.html,
+    // otherwise falls back to a demo piece from URL params or default.
+    function loadPiece() {
+      // Try localStorage (set by the generate flow in index.html)
+      let piece = null;
+      try { piece = JSON.parse(localStorage.getItem('listn_share_piece')); } catch(e) {}
+
+      // Try URL params
+      if (!piece) {
+        const params = new URLSearchParams(location.search);
+        if (params.get('emotion')) {
+          piece = {
+            emotion: params.get('emotion') || 'ambiguity',
+            title:   params.get('title')   || 'Between Worlds',
+            author:  params.get('author')  || '@julia_c',
+            time:    params.get('time')    || 'just now',
+            image:   params.get('image')   || null,
+          };
+        }
+      }
+
+      // Default demo
+      if (!piece) {
+        piece = { emotion:'ambiguity', title:'Between Worlds', author:'@julia_c', time:'just now', image:null };
+      }
+
+      return piece;
+    }
+
+    function applyPiece(piece) {
+      const color = emotionColors[piece.emotion] || emotionColors.ambiguity;
+      const grad  = emotionGradients[piece.emotion] || emotionGradients.ambiguity;
+
+      // Artwork display
+      document.getElementById('artworkEmotionBar').style.background = color;
+      document.getElementById('artworkBadgeDot').style.background   = color;
+      document.getElementById('artworkBadgeLabel').textContent       = emotionNames[piece.emotion] || piece.emotion;
+      document.querySelector('.artwork-bg-blur').style.background    = grad;
+      document.getElementById('artworkDiv').style.background         = grad;
+
+      // If there's a canvas image from localStorage
+      if (piece.image) {
+        const img = new Image();
+        img.src = piece.image;
+        img.onload = () => {
+          const canvas = document.getElementById('artworkCanvas');
+          canvas.width  = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          canvas.getContext('2d').drawImage(img, 0, 0);
+          canvas.style.display = 'block';
+          document.getElementById('artworkDiv').style.display = 'none';
+        };
+      }
+
+      // Panel text
+      const titleWords = piece.title.split(' ');
+      const mid = Math.ceil(titleWords.length / 2);
+      document.getElementById('shareTitle').innerHTML =
+        titleWords.slice(0, mid).join(' ') + '<br>' + (titleWords.slice(mid).join(' ') || '') + '.';
+
+      document.getElementById('shareAuthor').textContent  = piece.author;
+      document.getElementById('shareEmotion').textContent = emotionNames[piece.emotion] || piece.emotion;
+      document.getElementById('shareTime').textContent    = piece.time;
+
+      // Share URL
+      const slug = piece.title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+      document.getElementById('shareUrl').textContent = 'listn.art/p/' + slug;
+      document.getElementById('shareUrl').dataset.url = 'https://listn.art/p/' + slug;
+    }
+
+    applyPiece(loadPiece());
+
+    // ── COPY LINK ──
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const url = document.getElementById('shareUrl').dataset.url || document.getElementById('shareUrl').textContent;
+      navigator.clipboard.writeText(url).catch(() => {});
+      const confirm = document.getElementById('copyConfirm');
+      confirm.classList.add('visible');
+      setTimeout(() => confirm.classList.remove('visible'), 2800);
+    });
+
+    // ── SEND ──
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const val = document.getElementById('sendInput').value.trim();
+      if (!val) return;
+      // In production this would call an API. For now: clear + feedback
+      document.getElementById('sendInput').value = '';
+      document.getElementById('sendInput').placeholder = 'Sent!';
+      setTimeout(() => { document.getElementById('sendInput').placeholder = 'Enter email or @username'; }, 2500);
+    });
+
+    // ── DOWNLOAD ──
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      const canvas = document.getElementById('artworkCanvas');
+      if (canvas.style.display !== 'none') {
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = 'listn-piece.png';
+        a.click();
+      } else {
+        // Fallback: tell user no canvas available
+        document.getElementById('downloadBtn').textContent = 'Generate a piece first';
+      }
+    });
+
+    // ── PROOF COUNTER animate ──
+    let count = 1284;
+    setInterval(() => {
+      if (Math.random() > .7) {
+        count++;
+        const el = document.getElementById('proofCount');
+        if (el) el.textContent = count.toLocaleString();
+      }
+    }, 6000);
+  </script>
+</body>
+</html>
