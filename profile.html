@@ -249,6 +249,91 @@
     .footer-copy { font-size:11px; color:#333; letter-spacing:.1em; }
 
     @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── RESPONSIVE ── */
+
+    @media (hover: none) and (pointer: coarse) {
+      .cursor, .cursor-ring { display: none; }
+      body { cursor: auto; }
+      .tab, .profile-btn, .modal-save, .modal-cancel { cursor: pointer; }
+    }
+
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 36px; height: 36px; background: transparent; border: none;
+      cursor: pointer; padding: 4px; flex-shrink: 0; position: relative; z-index: 501;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 1px; background: var(--white);
+      transition: transform .3s ease, opacity .3s ease; transform-origin: center;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .nav-mobile-overlay {
+      display: none; position: fixed; inset: 0; z-index: 490;
+      background: var(--black); flex-direction: column; padding: 96px 40px 56px;
+    }
+    .nav-mobile-overlay.open { display: flex; }
+    .nav-mobile-inner { display: flex; flex-direction: column; }
+    .nav-mobile-link {
+      font-size: clamp(36px, 10vw, 52px); font-weight: 900;
+      letter-spacing: -.025em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+      opacity: .22; padding: 12px 0; border-bottom: 1px solid var(--grey);
+      transition: opacity .25s ease;
+    }
+    .nav-mobile-link:last-child { border-bottom: none; }
+    .nav-mobile-link:hover { opacity: 1; }
+
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-right { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .profile-header { padding: 88px 24px 0; }
+      .profile-top { flex-direction: column; align-items: flex-start; gap: 20px; padding-bottom: 28px; }
+      .profile-actions { width: 100%; }
+      .profile-btn { flex: 1; text-align: center; }
+
+      .stat-item { padding: 16px 20px 16px 0; }
+      .stat-item + .stat-item { padding-left: 20px; }
+
+      .profile-tabs { padding: 0 24px; overflow-x: auto; white-space: nowrap; }
+      .tab { margin-right: 24px; }
+
+      .works-grid {
+        padding: 24px 16px;
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .work-item:nth-child(n) { grid-column: auto !important; aspect-ratio: 1 / 1; }
+
+      .saved-grid { padding: 24px 16px; grid-template-columns: repeat(2, 1fr); }
+
+      .about-section { grid-template-columns: 1fr; gap: 48px; padding: 40px 24px; }
+
+      footer { padding: 32px 24px; }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 18px 20px; }
+      .nav-mobile-overlay { padding: 88px 28px 48px; }
+
+      .profile-header { padding: 80px 20px 0; }
+      .profile-tabs { padding: 0 20px; }
+
+      .works-grid { padding: 20px 12px; grid-template-columns: 1fr; }
+      .work-item:nth-child(n) { grid-column: 1 !important; aspect-ratio: 4/3; }
+
+      .saved-grid { padding: 20px 12px; grid-template-columns: 1fr; }
+
+      .about-section { padding: 32px 20px; }
+
+      .modal { padding: 32px 24px; }
+
+      footer { padding: 28px 20px; }
+    }
   </style>
 </head>
 <body>
@@ -287,7 +372,16 @@
       <a href="profile.html"      class="nav-link active">Profile</a>
       <a href="signin.html"       class="nav-link">Sign in</a>
     </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </nav>
+  <div class="nav-mobile-overlay" id="navMobileOverlay">
+    <div class="nav-mobile-inner">
+      <a href="index.html#feed"   class="nav-mobile-link">Feed</a>
+      <a href="index.html#create" class="nav-mobile-link">Create</a>
+      <a href="profile.html"      class="nav-mobile-link">Profile</a>
+      <a href="signin.html"       class="nav-mobile-link">Sign in</a>
+    </div>
+  </div>
 
   <!-- PROFILE HEADER -->
   <div class="profile-header">
@@ -671,6 +765,25 @@
       if (bio)    document.getElementById('displayBio').textContent    = bio;
       closeModal();
     });
+
+    // ── MOBILE NAV ──
+    (function() {
+      var btn = document.getElementById('navHamburger');
+      var overlay = document.getElementById('navMobileOverlay');
+      if (!btn || !overlay) return;
+      btn.addEventListener('click', function() {
+        btn.classList.toggle('open');
+        overlay.classList.toggle('open');
+        document.body.style.overflow = overlay.classList.contains('open') ? 'hidden' : '';
+      });
+      overlay.querySelectorAll('.nav-mobile-link').forEach(function(link) {
+        link.addEventListener('click', function() {
+          btn.classList.remove('open');
+          overlay.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      });
+    })();
   </script>
 </body>
 </html>

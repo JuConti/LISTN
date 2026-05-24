@@ -260,6 +260,80 @@
       from { opacity:0; transform:translateY(18px); }
       to   { opacity:1; transform:translateY(0); }
     }
+
+    /* ── RESPONSIVE ── */
+
+    @media (hover: none) and (pointer: coarse) {
+      .cursor, .cursor-ring { display: none; }
+      body { cursor: auto; }
+      .copy-btn, .send-friends-btn, .social-share-btn,
+      .download-btn, .cta-btn, .friend-card { cursor: pointer; }
+    }
+
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 36px; height: 36px; background: transparent; border: none;
+      cursor: pointer; padding: 4px; flex-shrink: 0; position: relative; z-index: 501;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 1px; background: var(--white);
+      transition: transform .3s ease, opacity .3s ease; transform-origin: center;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .nav-mobile-overlay {
+      display: none; position: fixed; inset: 0; z-index: 490;
+      background: var(--black); flex-direction: column; padding: 96px 40px 56px;
+    }
+    .nav-mobile-overlay.open { display: flex; }
+    .nav-mobile-inner { display: flex; flex-direction: column; }
+    .nav-mobile-link {
+      font-size: clamp(36px, 10vw, 52px); font-weight: 900;
+      letter-spacing: -.025em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+      opacity: .22; padding: 12px 0; border-bottom: 1px solid var(--grey);
+      transition: opacity .25s ease;
+    }
+    .nav-mobile-link:last-child { border-bottom: none; }
+    .nav-mobile-link:hover { opacity: 1; }
+
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-right { display: none; }
+      .nav-hamburger { display: flex; }
+
+      /* Stack layout: artwork on top, share panel below */
+      .share-layout { grid-template-columns: 1fr; }
+      .artwork-panel { min-height: 55vw; max-height: 60vh; }
+      .artwork-badge { top: 72px; left: 24px; }
+      .artwork-canvas-wrap { width: min(380px, 78%); }
+
+      .share-panel {
+        padding: 40px 28px 56px;
+        border-left: none;
+        border-top: 1px solid var(--grey);
+      }
+      .share-title { font-size: clamp(28px, 7vw, 44px); }
+
+      .friends-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
+      .friend-card { padding: 12px 6px 10px; }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 18px 20px; }
+      .nav-mobile-overlay { padding: 88px 28px 48px; }
+
+      .artwork-panel { min-height: 56vw; }
+      .artwork-canvas-wrap { width: 88%; }
+
+      .share-panel { padding: 32px 20px 48px; }
+
+      .friends-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .social-row { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
@@ -276,7 +350,15 @@
       <a href="index.html#create" class="nav-link">Create</a>
       <a href="profile.html"      class="nav-link">Profile</a>
     </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </nav>
+  <div class="nav-mobile-overlay" id="navMobileOverlay">
+    <div class="nav-mobile-inner">
+      <a href="index.html#feed"   class="nav-mobile-link">Feed</a>
+      <a href="index.html#create" class="nav-mobile-link">Create</a>
+      <a href="profile.html"      class="nav-mobile-link">Profile</a>
+    </div>
+  </div>
 
   <div class="share-layout">
 
@@ -559,6 +641,25 @@
         window.open(imgEl.src, '_blank');
       }
     });
+
+    // ── MOBILE NAV ──
+    (function() {
+      var btn = document.getElementById('navHamburger');
+      var overlay = document.getElementById('navMobileOverlay');
+      if (!btn || !overlay) return;
+      btn.addEventListener('click', function() {
+        btn.classList.toggle('open');
+        overlay.classList.toggle('open');
+        document.body.style.overflow = overlay.classList.contains('open') ? 'hidden' : '';
+      });
+      overlay.querySelectorAll('.nav-mobile-link').forEach(function(link) {
+        link.addEventListener('click', function() {
+          btn.classList.remove('open');
+          overlay.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      });
+    })();
 
     // ── PROOF COUNTER animate ──
     let count = 1284;
