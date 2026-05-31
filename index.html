@@ -687,6 +687,94 @@
     .footer-logo svg { height:16px; width:auto; display:block; }
     .footer-copy { font-size:11px; color:#333; letter-spacing:.1em; }
 
+    /* ── SYSTEM CARD INTERACTIVE ── */
+    .system-card { cursor: none; user-select: none; }
+    .system-card:hover { border-color: #555; }
+    .card-intensity.active { border-color: var(--red) !important; }
+    .card-calm.active      { border-color: var(--blue) !important; }
+    .card-balance.active   { border-color: var(--green) !important; }
+    .card-ambiguity.active { border-color: var(--purple) !important; }
+
+    .system-card-cta {
+      margin-top: 28px; font-size: 10px; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--dim);
+      transition: color .25s ease; display: flex; align-items: center; gap: 6px;
+    }
+    .system-card:hover .system-card-cta { color: var(--mid); }
+    .system-card.active .system-card-cta { color: var(--white); }
+    .cta-arrow { display: inline-block; transition: transform .3s ease; }
+    .system-card.active .cta-arrow { transform: rotate(180deg); }
+
+    /* ── SYSTEM GALLERY ── */
+    .system-gallery {
+      max-height: 0; overflow: hidden;
+      transition: max-height .65s cubic-bezier(.25,.46,.45,.94);
+      margin-top: 0;
+    }
+    .system-gallery.open { max-height: 700px; margin-top: 2px; }
+
+    .system-gallery-inner {
+      padding: 36px 0 0;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .4s ease .15s, transform .4s ease .15s;
+    }
+    .system-gallery.open .system-gallery-inner { opacity: 1; transform: translateY(0); }
+
+    .system-gallery-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px;
+    }
+    .system-gallery-eyebrow {
+      font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--mid); display: flex; align-items: center; gap: 10px;
+    }
+    .gallery-accent-dot {
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    }
+    .system-gallery-close {
+      width: 30px; height: 30px; background: transparent;
+      border: 1px solid var(--grey); color: var(--mid);
+      font-size: 13px; cursor: none; display: flex;
+      align-items: center; justify-content: center;
+      transition: border-color .2s, color .2s; font-family: inherit;
+    }
+    .system-gallery-close:hover { border-color: var(--white); color: var(--white); }
+
+    .system-gallery-grid {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px;
+    }
+    .sys-gal-item {
+      position: relative; aspect-ratio: 3/4; overflow: hidden; cursor: none;
+    }
+    .sys-gal-bar {
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      z-index: 2; opacity: 0; transition: opacity .4s;
+    }
+    .sys-gal-item:hover .sys-gal-bar { opacity: 1; }
+    .sys-gal-img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: grayscale(100%) brightness(.88) contrast(1.05);
+      transition: filter .75s cubic-bezier(.25,.46,.45,.94),
+                  transform .85s cubic-bezier(.25,.46,.45,.94);
+    }
+    .sys-gal-item:hover .sys-gal-img {
+      filter: grayscale(0%) brightness(1) contrast(1);
+      transform: scale(1.05);
+    }
+    .sys-gal-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, rgba(31,31,34,.92) 0%, transparent 52%);
+      opacity: 0; transition: opacity .4s;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 14px 12px; pointer-events: none;
+    }
+    .sys-gal-item:hover .sys-gal-overlay { opacity: 1; }
+    .sys-gal-emotion-tag { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+    .sys-gal-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .sys-gal-ename { font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--white); opacity: .5; }
+    .sys-gal-title { font-size: 12px; font-weight: 900; letter-spacing: -.01em; color: var(--white); line-height: 1.2; margin-bottom: 3px; }
+    .sys-gal-meta  { font-size: 10px; color: var(--mid); letter-spacing: .04em; }
+
     /* ── RESPONSIVE ── */
 
     /* Hide custom cursor on touch devices */
@@ -763,6 +851,9 @@
 
       .system-section { padding: 56px 24px; }
       .system-grid { grid-template-columns: repeat(2, 1fr); }
+      .system-gallery-grid { grid-template-columns: repeat(3, 1fr); }
+      .system-gallery.open { max-height: 1000px; }
+      .system-gallery-close { cursor: pointer; }
 
       .preview-badge { top: 80px; left: 24px; }
       .preview-hero-bottom {
@@ -804,6 +895,9 @@
 
       .system-section { padding: 48px 20px; }
       .system-grid { grid-template-columns: 1fr; }
+      .system-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .system-gallery.open { max-height: 1400px; }
+      .system-card, .sys-gal-item, .system-gallery-close { cursor: pointer; }
 
       .preview-hero-bottom { padding: 0 20px 28px; }
       .preview-btn { padding: 13px 18px; font-size: 10px; }
@@ -1134,7 +1228,7 @@
       <span class="section-label">Visual System</span>
     </div>
     <div class="system-grid reveal">
-      <div class="system-card card-intensity">
+      <div class="system-card card-intensity" data-emotion="intensity">
         <div class="system-card-bg"></div>
         <div class="system-number">01</div>
         <div class="system-color-swatch" style="background:var(--red)"></div>
@@ -1143,8 +1237,9 @@
         <div class="system-emotions">
           <span class="sys-tag">Rage</span><span class="sys-tag">Passion</span><span class="sys-tag">Terror</span><span class="sys-tag">Euphoria</span>
         </div>
+        <div class="system-card-cta">View examples <span class="cta-arrow">↓</span></div>
       </div>
-      <div class="system-card card-calm">
+      <div class="system-card card-calm" data-emotion="calm">
         <div class="system-card-bg"></div>
         <div class="system-number">02</div>
         <div class="system-color-swatch" style="background:var(--blue)"></div>
@@ -1153,8 +1248,9 @@
         <div class="system-emotions">
           <span class="sys-tag">Calm</span><span class="sys-tag">Sadness</span><span class="sys-tag">Longing</span><span class="sys-tag">Silence</span>
         </div>
+        <div class="system-card-cta">View examples <span class="cta-arrow">↓</span></div>
       </div>
-      <div class="system-card card-balance">
+      <div class="system-card card-balance" data-emotion="balance">
         <div class="system-card-bg"></div>
         <div class="system-number">03</div>
         <div class="system-color-swatch" style="background:var(--green)"></div>
@@ -1163,8 +1259,9 @@
         <div class="system-emotions">
           <span class="sys-tag">Peace</span><span class="sys-tag">Clarity</span><span class="sys-tag">Gratitude</span><span class="sys-tag">Trust</span>
         </div>
+        <div class="system-card-cta">View examples <span class="cta-arrow">↓</span></div>
       </div>
-      <div class="system-card card-ambiguity">
+      <div class="system-card card-ambiguity" data-emotion="ambiguity">
         <div class="system-card-bg"></div>
         <div class="system-number">04</div>
         <div class="system-color-swatch" style="background:var(--purple)"></div>
@@ -1173,6 +1270,18 @@
         <div class="system-emotions">
           <span class="sys-tag">Nostalgia</span><span class="sys-tag">Confusion</span><span class="sys-tag">Wonder</span><span class="sys-tag">Grief</span>
         </div>
+        <div class="system-card-cta">View examples <span class="cta-arrow">↓</span></div>
+      </div>
+    </div>
+
+    <!-- SYSTEM GALLERY (injected by JS on card click) -->
+    <div class="system-gallery" id="systemGallery">
+      <div class="system-gallery-inner">
+        <div class="system-gallery-header">
+          <span class="system-gallery-eyebrow" id="systemGalleryLabel"></span>
+          <button class="system-gallery-close" id="systemGalleryClose" aria-label="Close">&#x2715;</button>
+        </div>
+        <div class="system-gallery-grid" id="systemGalleryGrid"></div>
       </div>
     </div>
   </section>
@@ -1880,6 +1989,119 @@
     setInterval(()=>{ if(Math.random()>.7){count++;const el=document.getElementById('feedCount');if(el)el.textContent=count+' pieces';} },8000);
 
   });
+
+
+    // ── SYSTEM CARD GALLERY ──────────────────────────────────────
+    (function() {
+      // One image per sub-range — styled as user-created pieces
+      const galleryData = {
+        intensity: [
+          { num:2,  label:'Passion',   title:'Burning Edge',   author:'@marta_v',  time:'2h ago' },
+          { num:5,  label:'Euphoria',  title:'Electric Rush',  author:'@felix_r',  time:'5h ago' },
+          { num:8,  label:'Rage',      title:'Red Signal',     author:'@ana_li',   time:'1d ago' },
+          { num:11, label:'Explosive', title:'Flashpoint',     author:'@tom_p',    time:'2d ago' },
+          { num:15, label:'Terror',    title:'No Way Out',     author:'@lena_m',   time:'3d ago' },
+          { num:22, label:'Despair',   title:'Ash',            author:'@sara_k',   time:'5d ago' },
+        ],
+        calm: [
+          { num:3,  label:'Serene',     title:'Still Water',   author:'@daniel_o', time:'1h ago' },
+          { num:6,  label:'Dreamy',     title:'Soft Hours',    author:'@nina_t',   time:'4h ago' },
+          { num:9,  label:'Melancholy', title:'Grey Light',    author:'@julia_c',  time:'1d ago' },
+          { num:12, label:'Longing',    title:'Missing',       author:'@marta_v',  time:'2d ago' },
+          { num:17, label:'Lonely',     title:'Empty Room',    author:'@felix_r',  time:'4d ago' },
+          { num:26, label:'Fading',     title:'Vanishing',     author:'@ana_li',   time:'1w ago' },
+        ],
+        balance: [
+          { num:2,  label:'Joy',        title:'Morning Light', author:'@tom_p',    time:'3h ago' },
+          { num:5,  label:'Hope',       title:'Open Sky',      author:'@lena_m',   time:'8h ago' },
+          { num:10, label:'Gratitude',  title:'Full Circle',   author:'@sara_k',   time:'1d ago' },
+          { num:15, label:'Warmth',     title:'Hearth',        author:'@daniel_o', time:'3d ago' },
+          { num:20, label:'Clarity',    title:'Clear Sight',   author:'@nina_t',   time:'5d ago' },
+          { num:28, label:'Acceptance', title:'Just Enough',   author:'@julia_c',  time:'1w ago' },
+        ],
+        ambiguity: [
+          { num:3,  label:'Wonder',     title:'Infinite Room', author:'@marta_v',  time:'2h ago' },
+          { num:5,  label:'Magic',      title:'Threshold',     author:'@felix_r',  time:'6h ago' },
+          { num:10, label:'Nostalgia',  title:'Before & After',author:'@ana_li',   time:'2d ago' },
+          { num:15, label:'Memory',     title:'1997',          author:'@tom_p',    time:'3d ago' },
+          { num:22, label:'Duality',    title:'Both Sides',    author:'@lena_m',   time:'6d ago' },
+          { num:33, label:'Impossible', title:'Between Worlds',author:'@sara_k',   time:'2w ago' },
+        ],
+      };
+      const emotionColorMap = {
+        intensity: 'var(--red)',
+        calm:      'var(--blue)',
+        balance:   'var(--green)',
+        ambiguity: 'var(--purple)',
+      };
+      const emotionNameMap = {
+        intensity: 'High Intensity',
+        calm:      'Low Intensity',
+        balance:   'Balance & Harmony',
+        ambiguity: 'Ambiguity & Complexity',
+      };
+
+      const galleryEl    = document.getElementById('systemGallery');
+      const galleryGrid  = document.getElementById('systemGalleryGrid');
+      const galleryLabel = document.getElementById('systemGalleryLabel');
+      const closeBtn     = document.getElementById('systemGalleryClose');
+      let activeCard = null;
+
+      function buildGallery(emotion) {
+        const color = emotionColorMap[emotion];
+        galleryLabel.innerHTML =
+          '<span class="gallery-accent-dot" style="background:' + color + '"></span>' +
+          emotionNameMap[emotion];
+
+        galleryGrid.innerHTML = '';
+        var eName = emotionNameMap[emotion];
+        galleryData[emotion].forEach(function(item) {
+          var div = document.createElement('div');
+          div.className = 'sys-gal-item';
+          div.innerHTML =
+            '<div class="sys-gal-bar" style="background:' + color + '"></div>' +
+            '<img class="sys-gal-img" src="' + ikUrl(emotion, item.num) + '" alt="' + item.title + '" loading="lazy" />' +
+            '<div class="sys-gal-overlay">' +
+              '<div class="sys-gal-emotion-tag">' +
+                '<span class="sys-gal-dot" style="background:' + color + '"></span>' +
+                '<span class="sys-gal-ename">' + item.label + '</span>' +
+              '</div>' +
+              '<div class="sys-gal-title">' + item.title + '</div>' +
+              '<div class="sys-gal-meta">by ' + item.author + ' · ' + item.time + '</div>' +
+            '</div>';
+          galleryGrid.appendChild(div);
+        });
+      }
+
+      function openGallery(emotion, card) {
+        buildGallery(emotion);
+        galleryEl.classList.add('open');
+        document.querySelectorAll('.system-card').forEach(function(c) { c.classList.remove('active'); });
+        card.classList.add('active');
+        activeCard = card;
+        setTimeout(function() {
+          galleryEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 200);
+      }
+
+      function closeGallery() {
+        galleryEl.classList.remove('open');
+        document.querySelectorAll('.system-card').forEach(function(c) { c.classList.remove('active'); });
+        activeCard = null;
+      }
+
+      document.querySelectorAll('.system-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          if (card === activeCard) {
+            closeGallery();
+          } else {
+            openGallery(card.dataset.emotion, card);
+          }
+        });
+      });
+
+      if (closeBtn) closeBtn.addEventListener('click', closeGallery);
+    })();
 
     // ── MOBILE NAV ──
     (function() {
